@@ -1,0 +1,12 @@
+dart_sdk: /usr/local/Cellar/dart/1.12.1/libexec
+pub_cache_dir: /Users/anton/.pub-cache
+output_dir: /Users/anton/dartdocs.org
+hosted_url: https://dartdocs.org
+gcs_prefix: documentation
+gcs_meta: meta
+gc_project_name: dartdocs
+gc_zone: us-central1-f
+gc_group_name: dartdocs-generators
+bucket: www.dartdocs2.com
+install_timeout: 30
+concurrency_count: 1

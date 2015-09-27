@@ -1,0 +1,17 @@
+language: dart
+matrix:
+  include:
+    - dart: stable
+    - dart: dev
+  allow_failures:
+    - dart: dev
+  fast_finish: true
+sudo: false
+cache:
+  apt: true
+  directories:
+    - $HOME/.pub-cache
+install:
+  - travis_retry pub get
+script:
+  - pub run grinder analyze lint

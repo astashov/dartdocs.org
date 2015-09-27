@@ -1,0 +1,19 @@
+name: dartdoc_runner
+version: 0.0.1
+description: Generates the Dart documentation for all the packages in pub
+
+dependencies:
+  args: any
+  logging: any
+  http: any
+  yaml: any
+  intl: any
+  googleapis: any
+  yaml: any
+  path: any
+  googleapis_auth: any
+
+dev_dependencies:
+  grinder: any
+  tuneup: any
+  linter: any
