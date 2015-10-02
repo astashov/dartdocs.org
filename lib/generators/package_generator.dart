@@ -1,4 +1,4 @@
-library dartdoc_runner.generator;
+library dartdoc_runner.package_generator;
 
 import 'dart:async';
 import 'dart:io';
@@ -9,11 +9,11 @@ import 'package:dartdoc_runner/package.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
 
-var _logger = new Logger("generator");
+var _logger = new Logger("package_generator");
 
-class Generator {
+class PackageGenerator {
   final Config config;
-  Generator(this.config);
+  PackageGenerator(this.config);
 
   Future<Set<Package>> generate(Iterable packages) async {
     var erroredPackages = new Set();
@@ -31,8 +31,7 @@ class Generator {
           "--dart-sdk=${config.dartSdkPath}"
         ]);
       } on RunCommandError catch (e, s) {
-        _addLog(logs, Level.WARNING,
-            "Got RunCommandError exception,\nstdout: ${e.stdout},\nstderr: ${e.stderr}");
+        _addLog(logs, Level.WARNING, "Got RunCommandError exception,\nstdout: ${e.stdout},\nstderr: ${e.stderr}");
         erroredPackages.add(package);
       } catch (e, s) {
         _addLog(logs, Level.WARNING, "Got $e exception,\nstacktrace: $s");
@@ -51,24 +50,20 @@ class Generator {
   }
 
   Future<Null> _install(List<LogRecord> logs, Package package) async {
-    var pubGlobalFuture = _runCommand(logs, "pub",
-        ["global", "activate", package.name, package.version.toString()]);
+    var pubGlobalFuture = _runCommand(logs, "pub", ["global", "activate", package.name, package.version.toString()]);
 
     await pubGlobalFuture.timeout(new Duration(seconds: 30), onTimeout: () {
       throw new RunCommandError("Install error - timeout", "");
     });
 
-    var workingDirectory = path.join(
-        config.pubCacheDir, "hosted", "pub.dartlang.org", package.dirname);
+    var workingDirectory = package.pubCacheDir(config);
     await _runCommand(logs, "pub", ["get"], workingDirectory: workingDirectory);
   }
 
-  Future _runCommand(
-      List<LogRecord> logs, String command, Iterable<String> arguments,
+  Future _runCommand(List<LogRecord> logs, String command, Iterable<String> arguments,
       {String workingDirectory}) async {
     _addLog(logs, Level.INFO, "Running '$command ${arguments.join(" ")}'");
-    var result = await Process.run(command, arguments,
-        workingDirectory: workingDirectory);
+    var result = await Process.run(command, arguments, workingDirectory: workingDirectory);
 
     if (result.stdout != "") {
       _addLog(logs, Level.INFO, "Stdout: ${result.stdout}");
@@ -88,8 +83,7 @@ class Generator {
       await directory.create(recursive: true);
     }
     var file = new File(path.join(package.outputDir(config), "log.txt"));
-    var contents =
-        logs.map((logRecord) => logging.logFormatter(logRecord)).join("\n");
+    var contents = logs.map((logRecord) => logging.logFormatter(logRecord)).join("\n");
     await file.writeAsString(contents);
   }
 }

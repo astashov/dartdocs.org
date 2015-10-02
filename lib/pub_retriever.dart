@@ -10,8 +10,7 @@ import 'package:logging/logging.dart';
 
 var _logger = new Logger("pub_retriever");
 
-String _getUrl(int page) =>
-    "https://pub.dartlang.org/packages.json?page=$page";
+String _getUrl(int page) => "https://pub.dartlang.org/packages.json?page=$page";
 
 class PubRetriever {
   Set<Package> _currentList = new Set();
@@ -43,8 +42,7 @@ class PubRetriever {
       //} while (json["next"] != null);
     } while (page < 2);
 
-    _logger
-        .info("The number of the available packages - ${_currentList.length}");
+    _logger.info("The number of the available packages - ${_currentList.length}");
     return _currentList;
   }
 }

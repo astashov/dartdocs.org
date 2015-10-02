@@ -18,7 +18,6 @@ Map groupByOne(Iterable collection, bool condition(i)) {
   });
 }
 
-
 /// Combines the hash codes for a list of objects.
 ///
 /// Useful when computing the hash codes based on the properties of a custom class.
@@ -47,8 +46,7 @@ int hash(Iterable<Object> objects) {
 /// ["1", "2", "3", "4"]
 /// ["5", "6", "7", nil]
 /// ["8", "9", "10", nil]
-Iterable<Iterable> inGroups(Iterable collection, int number,
-    [fillWith = null]) {
+Iterable<Iterable> inGroups(Iterable collection, int number, [fillWith = null]) {
   var coll = collection.toList();
   var division = collection.length ~/ number;
   var modulo = collection.length % number;

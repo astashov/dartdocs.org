@@ -17,8 +17,7 @@ class Version implements Comparable {
 
   int compareTo(Version other) {
     if (doesFollowSemanticVersioning && other.doesFollowSemanticVersioning) {
-      return new _ParsedVersion.fromString(toString())
-          .compareTo(new _ParsedVersion.fromString(other.toString()));
+      return new _ParsedVersion.fromString(toString()).compareTo(new _ParsedVersion.fromString(other.toString()));
     } else {
       return toString().compareTo(other.toString());
     }

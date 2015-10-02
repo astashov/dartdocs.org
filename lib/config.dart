@@ -24,8 +24,7 @@ class Config {
   factory Config.buildFromFiles(String configFile, String credentialsFile) {
     var configValues = yaml.loadYaml(new File(configFile).readAsStringSync());
     var credentialsValues = yaml.loadYaml(new File(credentialsFile).readAsStringSync());
-    var serviceAccountCredentials =
-        new ServiceAccountCredentials.fromJson(JSON.encode(credentialsValues));
+    var serviceAccountCredentials = new ServiceAccountCredentials.fromJson(JSON.encode(credentialsValues));
     return new Config._(
         configValues["dart_sdk"],
         configValues["bucket"],
@@ -42,7 +41,18 @@ class Config {
         serviceAccountCredentials);
   }
 
-  Config._(this.dartSdkPath, this.bucket, this.pubCacheDir, this.outputDir, this.hostedUrl,
-      this.gcProjectName, this.gcZone, this.gcGroupName, this.gcsPrefix, this.gcsMeta,
-      this.installTimeout, this.concurrencyCount, this.credentials);
+  Config._(
+      this.dartSdkPath,
+      this.bucket,
+      this.pubCacheDir,
+      this.outputDir,
+      this.hostedUrl,
+      this.gcProjectName,
+      this.gcZone,
+      this.gcGroupName,
+      this.gcsPrefix,
+      this.gcsMeta,
+      this.installTimeout,
+      this.concurrencyCount,
+      this.credentials);
 }
