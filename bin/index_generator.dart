@@ -21,6 +21,7 @@ main(List<String> args) async {
   await storageRetriever.update();
   var previousSuccessfulPackagesLength = 0;
   var previousErroredPackagesLength = 0;
+  await indexGenerator.generate404();
   while (true) {
     _logger.info("Retrieving the list of generated packages from GCS");
     await storageRetriever.update();

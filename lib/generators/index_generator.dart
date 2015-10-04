@@ -30,9 +30,7 @@ class IndexGenerator {
     });
     html.writeln("</dl>");
     html.writeln(_generateFooter());
-    var file = new File(path.join(config.outputDir, MenuItem.failed.url));
-    await file.create(recursive: true);
-    await file.writeAsString(html.toString());
+    await writeToFile(MenuItem.failed.url, html.toString());
   }
 
   Future<Null> generateHistory(List<Package> sortedPackages, Set<Package> successfulPackages) async {
@@ -52,9 +50,7 @@ class IndexGenerator {
     });
     html.writeln("</tbody></table>");
     html.writeln(_generateFooter());
-    var file = new File(path.join(config.outputDir, MenuItem.history.url));
-    await file.create(recursive: true);
-    await file.writeAsString(html.toString());
+    await writeToFile(MenuItem.history.url, html.toString());
   }
 
   Future<Null> generateHome(Iterable<Package> packages) async {
@@ -72,16 +68,40 @@ class IndexGenerator {
     });
     html.writeln("</dl>");
     html.writeln(_generateFooter());
-    var file = new File(path.join(config.outputDir, MenuItem.home.url));
+    await writeToFile(MenuItem.home.url, html.toString());
+  }
+
+  Future<Null> generate404() async {
+    var html = new StringBuffer();
+    html.writeln(_generateHeader());
+    html.writeln("""
+      <div class="row">
+        <div class="col-md-12">
+          <div class="jumbotron center">
+              <h1>Page Not Found <small><font face="Tahoma" color="red">Error 404</font></small></h1>
+              <br />
+              <p>The page you requested could not be found. Its possible documentation was not built for the package
+                requested. Check the <a href="/${MenuItem.failed.url}">build failures</a> page for your package.</p>
+              <a href="/${MenuItem.home.url}" class="btn btn-lg btn-info"><i class="glyphicon glyphicon-home glyphicon-white"></i> dartdocs home</a>
+            </div>
+            <br />
+        </div>
+      </div>""");
+    html.writeln(_generateFooter());
+    await writeToFile("404.html", html.toString());
+  }
+
+  Future<Null> writeToFile(String filePath, String contents) async {
+    var file = new File(path.join(config.outputDir, filePath));
     await file.create(recursive: true);
-    await file.writeAsString(html.toString());
+    await file.writeAsString(contents);
   }
 
   String _generateFooter() {
     return "</div></body></html>";
   }
 
-  String _generateHeader(MenuItem activeItem) {
+  String _generateHeader([MenuItem activeItem]) {
     return """<html>
   <head>
     <title>Dartdocs - Documentation for Dart packages</title>

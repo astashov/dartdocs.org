@@ -18,6 +18,7 @@ class IndexUploader {
 
   Future<Null> uploadIndexFiles() async {
     _logger.info("Uploading index files...");
+    await storage.insertFile("404.html", new File(p.join(config.outputDir, "404.html")));
     await Future.wait(MenuItem.all.map((menuItem) {
       return storage.insertFile(menuItem.url, new File(p.join(config.outputDir, menuItem.url)));
     }));
