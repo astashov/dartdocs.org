@@ -8,6 +8,7 @@ import 'package:dartdoc_runner/logging.dart' as logging;
 import 'package:dartdoc_runner/package.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
+import 'package:dartdoc_runner/utils.dart';
 
 var _logger = new Logger("package_generator");
 
@@ -15,33 +16,37 @@ class PackageGenerator {
   final Config config;
   PackageGenerator(this.config);
 
-  Future<Set<Package>> generate(Iterable packages) async {
+  Future<Set<Package>> generate(Iterable allPackages) async {
+    var groupedPackages = inGroupsOf(allPackages, 4);
     var erroredPackages = new Set();
-    var futures = packages.map((Package package) async {
-      List<LogRecord> logs = [];
-      try {
-        await _install(logs, package);
-        await _runCommand(logs, "pub", [
-          "global",
-          "run",
-          "dartdoc",
-          "--input=${package.pubCacheDir(config)}",
-          "--output=${package.outputDir(config)}",
-          "--hosted-url=${config.hostedUrl}",
-          "--add-crossdart",
-          "--dart-sdk=${config.dartSdkPath}"
-        ]);
-      } on RunCommandError catch (e, s) {
-        _addLog(logs, Level.WARNING, "Got RunCommandError exception,\nstdout: ${e.stdout},\nstderr: ${e.stderr}");
-        erroredPackages.add(package);
-      } catch (e, s) {
-        _addLog(logs, Level.WARNING, "Got $e exception,\nstacktrace: $s");
-        erroredPackages.add(package);
-      } finally {
-        await _saveLogsToFile(logs, package);
-      }
-    });
-    await Future.wait(futures);
+    for (var packages in groupedPackages) {
+      var futures = packages.map((Package package) async {
+        List<LogRecord> logs = [];
+        try {
+          await _runCommand(logs, "pub", ["--version"]);
+          await _install(logs, package);
+          await _runCommand(logs, "pub", [
+            "global",
+            "run",
+            "dartdoc",
+            "--input=${package.pubCacheDir(config)}",
+            "--output=${package.outputDir(config)}",
+            "--hosted-url=${config.hostedUrl}",
+            "--add-crossdart",
+            "--dart-sdk=${config.dartSdkPath}"
+          ]);
+        } on RunCommandError catch (e, s) {
+          _addLog(logs, Level.WARNING, "Got RunCommandError exception,\nstdout: ${e.stdout},\nstderr: ${e.stderr}");
+          erroredPackages.add(package);
+        } catch (e, s) {
+          _addLog(logs, Level.WARNING, "Got $e exception,\nstacktrace: $s");
+          erroredPackages.add(package);
+        } finally {
+          await _saveLogsToFile(logs, package);
+        }
+      });
+      await Future.wait(futures);
+    }
     return erroredPackages;
   }
 
@@ -51,7 +56,7 @@ class PackageGenerator {
   }
 
   Future<Null> _install(List<LogRecord> logs, Package package) async {
-    var pubGlobalFuture = _runCommand(logs, "pub", ["global", "activate", package.name, package.version.toString()]);
+    var pubGlobalFuture = _runCommand(logs, "pub", ["cache", "add", package.name, "-v", package.version.toString()]);
 
     await pubGlobalFuture.timeout(new Duration(seconds: 30), onTimeout: () {
       throw new RunCommandError("Install error - timeout", "");
