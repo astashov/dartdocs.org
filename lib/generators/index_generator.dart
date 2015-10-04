@@ -42,7 +42,11 @@ class IndexGenerator {
     sortedPackages.forEach((package) {
       var isSuccessful = successfulPackages.contains(package);
       html.writeln("<tr${isSuccessful ? '' : ' class="danger"'}>");
-      html.writeln("<td>${package.fullName}</td>");
+      if (isSuccessful) {
+        html.writeln("<td><a href='/${package.url(config)}/index.html'>${package.fullName}</a></td>");
+      } else {
+        html.writeln("<td>${package.fullName}</td>");
+      }
       html.writeln("<td>${package.createdAt}</td>");
       html.writeln("<td>${isSuccessful ? 'Success' : '<strong>FAILURE</strong>'}</td>");
       html.writeln("<td><a href='/${package.logUrl(config)}'>build log</a></td>");
