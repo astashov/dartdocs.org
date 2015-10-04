@@ -21,8 +21,9 @@ class IndexGenerator {
     html.writeln(_generateHeader(MenuItem.failed));
     html.writeln("<dl>");
     groupedPackages.forEach((name, packageVersions) {
-      html.writeln("<dt>${packageVersions.first.name}</dt><dd>");
-      for (var package in packageVersions) {
+      List<Package> sortedPackageVersions = new List.from(packageVersions)..sort((a, b) => b.compareTo(a));
+      html.writeln("<dt>${sortedPackageVersions.first.name}</dt><dd>");
+      for (var package in sortedPackageVersions) {
         html.writeln(
             "<a href='/${config.gcsPrefix}/${package.name}/${package.version}/log.txt'>${package.version}</a> ");
       }
@@ -63,8 +64,9 @@ class IndexGenerator {
     html.writeln(_generateHeader(MenuItem.home));
     html.writeln("<dl>");
     groupedPackages.forEach((name, packageVersions) {
-      html.writeln("<dt>${packageVersions.first.name}</dt><dd>");
-      for (var package in packageVersions) {
+      List<Package> sortedPackageVersions = new List.from(packageVersions)..sort((a, b) => b.compareTo(a));
+      html.writeln("<dt>${sortedPackageVersions.first.name}</dt><dd>");
+      for (var package in sortedPackageVersions) {
         html.writeln(
             "<a href='/${config.gcsPrefix}/${package.name}/${package.version}/index.html'>${package.version}</a> ");
       }
