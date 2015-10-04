@@ -27,10 +27,11 @@ class Storage {
 
   Future<Null> insertFile(String path, File file, {String contentType}) async {
     contentType = contentType ?? _getContentType(path);
-    var media = new Media(file.openRead(), await file.length(), contentType: contentType);
+    var stream = file.openRead().transform(GZIP.encoder);
+    var media = new Media(stream, null, contentType: contentType);
     await (await _storageApi)
         .objects
-        .insert(null, config.bucket, name: path, uploadMedia: media, predefinedAcl: "publicRead");
+        .insert(null, config.bucket, uploadOptions: UploadOptions.Resumable, contentEncoding: "gzip", name: path, uploadMedia: media, predefinedAcl: "publicRead");
   }
 
   Future<Null> insertKey(String path) async {

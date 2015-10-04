@@ -16,6 +16,10 @@ class PackageGenerator {
   final Config config;
   PackageGenerator(this.config);
 
+  Future<Null> activateDartdoc() async {
+    await _runCommand([], "pub", ["global", "activate", "dartdoc"]);
+  }
+
   Future<Set<Package>> generate(Iterable allPackages) async {
     var groupedPackages = inGroupsOf(allPackages, 4);
     var erroredPackages = new Set();

@@ -26,6 +26,7 @@ main(List<String> args) async {
   var uploader = new PackageUploader(config, storage);
   while (true) {
     Set<Package> allPackages = (await pubRetriever.update());
+    await generator.activateDartdoc();
     await storageRetriever.update();
     var shard = await getShard(config);
     allPackages.removeAll(storageRetriever.allPackages);
@@ -41,6 +42,7 @@ main(List<String> args) async {
         await cleaner.delete(packages);
       }
     } else {
+      _logger.info("Sleeping for 3 minutes...");
       sleep(new Duration(minutes: 3));
     }
   }
