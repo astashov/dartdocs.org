@@ -28,6 +28,7 @@ class PackageGenerator {
           "--input=${package.pubCacheDir(config)}",
           "--output=${package.outputDir(config)}",
           "--hosted-url=${config.hostedUrl}",
+          "--add-crossdart",
           "--dart-sdk=${config.dartSdkPath}"
         ]);
       } on RunCommandError catch (e, s) {
