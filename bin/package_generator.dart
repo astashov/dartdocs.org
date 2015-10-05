@@ -31,17 +31,15 @@ main(List<String> args) async {
     await storageRetriever.update();
     var shard = await getShard(config);
     allPackages.removeAll(storageRetriever.allPackages);
-    var packageGroups = shard.part(allPackages.toList()).getRange(0, min(20, allPackages.length));
-    if (packageGroups.isNotEmpty) {
-      for (var packages in packageGroups) {
-        var erroredPackages = await generator.generate(packages);
-        var successfulPackages = packages.toSet()..removeAll(erroredPackages);
-        await uploader.uploadSuccessfulPackages(successfulPackages);
-        await uploader.markSuccessfulPackages(successfulPackages);
-        await uploader.uploadErroredPackages(erroredPackages);
-        await uploader.markErroredPackages(erroredPackages);
-        await cleaner.delete(packages);
-      }
+    var packages = shard.part(allPackages.toList()).getRange(0, min(20, allPackages.length));
+    if (packages.isNotEmpty) {
+      var erroredPackages = await generator.generate(packages);
+      var successfulPackages = packages.toSet()..removeAll(erroredPackages);
+      await uploader.uploadSuccessfulPackages(successfulPackages);
+      await uploader.markSuccessfulPackages(successfulPackages);
+      await uploader.uploadErroredPackages(erroredPackages);
+      await uploader.markErroredPackages(erroredPackages);
+      await cleaner.delete(packages);
     } else {
       _logger.info("Sleeping for 3 minutes...");
       sleep(new Duration(minutes: 3));
