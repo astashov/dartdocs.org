@@ -14,6 +14,7 @@ import 'package:dartdoc_runner/uploaders/package_uploader.dart';
 import 'package:logging/logging.dart';
 import 'package:dartdoc_runner/cleaners/package_cleaner.dart';
 import 'package:dartdoc_runner/utils.dart';
+import 'dart:math';
 
 main(List<String> args) async {
   logging.initialize();
@@ -30,7 +31,7 @@ main(List<String> args) async {
     await storageRetriever.update();
     var shard = await getShard(config);
     allPackages.removeAll(storageRetriever.allPackages);
-    var packageGroups = inGroupsOf(shard.part(allPackages.toList()), 20);
+    var packageGroups = shard.part(allPackages.toList()).getRange(0, min(20, allPackages.length));
     if (packageGroups.isNotEmpty) {
       for (var packages in packageGroups) {
         var erroredPackages = await generator.generate(packages);
