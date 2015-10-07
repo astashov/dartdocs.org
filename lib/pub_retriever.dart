@@ -7,6 +7,7 @@ import 'package:dartdoc_runner/package.dart';
 import 'package:dartdoc_runner/version.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
+import 'package:dartdoc_runner/utils/retry.dart';
 
 var _logger = new Logger("pub_retriever");
 
@@ -24,10 +25,10 @@ class PubRetriever {
     var json;
     do {
       _logger.info("Retrieving page $page");
-      json = await http.get(_getUrl(page)).then((r) => JSON.decode(r.body));
+      json = await retry(() => http.get(_getUrl(page)).then((r) => JSON.decode(r.body)));
       page += 1;
       var pageOfPackages = await Future.wait(json["packages"].map((packageUrl) {
-        return http.get(packageUrl).then((r) => JSON.decode(r.body));
+        return retry(() => http.get(packageUrl).then((r) => JSON.decode(r.body)));
       }));
       var packages = pageOfPackages.map((packageMap) {
         return packageMap["versions"].map((version) {

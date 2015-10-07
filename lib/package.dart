@@ -11,9 +11,9 @@ class Package implements Comparable<Package> {
   static const String logFileName = "log.txt";
   final String name;
   final Version version;
-  final DateTime createdAt;
+  final DateTime updatedAt;
 
-  Package(this.name, this.version, [this.createdAt]);
+  Package(this.name, this.version, [this.updatedAt]);
 
   factory Package.fromJson(String json) {
     final map = JSON.decode(json);
@@ -51,15 +51,19 @@ class Package implements Comparable<Package> {
   }
 
   Map<String, String> toMap() {
-    return {"name": name, "version": version.toString()};
+    var result = {"name": name, "version": version.toString()};
+    if (updatedAt != null) {
+      result["updatedAt"] = updatedAt;
+    }
+    return result;
   }
 
   String toString() {
     return "<PackageInfo ${toMap()}>";
   }
 
-  Package update({String name, Version version, DateTime createdAt}) {
-    return new Package(name ?? this.name, version ?? this.version, createdAt ?? this.createdAt);
+  Package update({String name, Version version, DateTime updatedAt}) {
+    return new Package(name ?? this.name, version ?? this.version, updatedAt ?? this.updatedAt);
   }
 
   String url(Config config) {

@@ -47,7 +47,7 @@ class PackageUploader {
       var entities = await new Directory(package.outputDir(config)).list(recursive: true).toList();
       var groups = inGroupsOf(entities.where((e) => e is File), 10);
       for (Iterable group in groups) {
-        await Future.wait(group.map((entity) async {
+        await Future.wait(group.map((entity) {
           var relative = entity.path.replaceFirst("${package.outputDir(config)}/", "");
           var path = p.join(config.gcsPrefix, package.name, package.version.toString(), relative);
           return storage.insertFile(path, entity);

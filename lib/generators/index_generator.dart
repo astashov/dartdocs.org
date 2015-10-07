@@ -48,7 +48,7 @@ class IndexGenerator {
       } else {
         html.writeln("<td>${package.fullName}</td>");
       }
-      html.writeln("<td>${package.createdAt}</td>");
+      html.writeln("<td>${package.updatedAt}</td>");
       html.writeln("<td>${isSuccessful ? 'Success' : '<strong>FAILURE</strong>'}</td>");
       html.writeln("<td><a href='/${package.logUrl(config)}'>build log</a></td>");
       html.writeln("</tr>");

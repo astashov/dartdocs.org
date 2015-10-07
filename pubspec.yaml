@@ -9,6 +9,7 @@ dependencies:
   yaml: any
   intl: any
   googleapis: any
+  googleapis_beta: any
   yaml: any
   path: any
   googleapis_auth: any
