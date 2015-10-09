@@ -17,6 +17,9 @@ class Config {
   final String gcGroupName;
   final String gcsPrefix;
   final String gcsMeta;
+  final String cloudflareApiKey;
+  final String cloudflareEmail;
+  final String cloudflareZone;
   final int installTimeout;
   final int concurrencyCount;
   final ServiceAccountCredentials credentials;
@@ -24,7 +27,8 @@ class Config {
   factory Config.buildFromFiles(String configFile, String credentialsFile) {
     var configValues = yaml.loadYaml(new File(configFile).readAsStringSync());
     var credentialsValues = yaml.loadYaml(new File(credentialsFile).readAsStringSync());
-    var serviceAccountCredentials = new ServiceAccountCredentials.fromJson(JSON.encode(credentialsValues));
+    var cloudflareValues = credentialsValues["cloudflare"];
+    var serviceAccountCredentials = new ServiceAccountCredentials.fromJson(JSON.encode(credentialsValues["google_cloud"]));
     return new Config._(
         configValues["dart_sdk"],
         configValues["bucket"],
@@ -36,6 +40,9 @@ class Config {
         configValues["gc_group_name"],
         configValues["gcs_prefix"],
         configValues["gcs_meta"],
+        cloudflareValues["api_key"],
+        cloudflareValues["email"],
+        cloudflareValues["zone"],
         configValues["install_timeout"],
         configValues["concurrency_count"],
         serviceAccountCredentials);
@@ -52,6 +59,9 @@ class Config {
       this.gcGroupName,
       this.gcsPrefix,
       this.gcsMeta,
+      this.cloudflareApiKey,
+      this.cloudflareEmail,
+      this.cloudflareZone,
       this.installTimeout,
       this.concurrencyCount,
       this.credentials);

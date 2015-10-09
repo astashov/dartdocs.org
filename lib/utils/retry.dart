@@ -11,7 +11,7 @@ Future<dynamic> retry(body(), {int number: 3, Iterable<Duration> durations: _def
   try {
     var result = await body();
     return result;
-  } catch (error, stackTrace) {
+  } catch (error, _) {
     if (number > 0) {
       var duration = durations.first;
       var newDurations = new List.from(durations);

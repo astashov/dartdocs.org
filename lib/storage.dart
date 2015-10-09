@@ -4,35 +4,38 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartdoc_runner/config.dart';
-import 'package:googleapis/storage/v1.dart';
+import 'package:googleapis/storage/v1.dart' as s;
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:path/path.dart' as p;
 import 'package:dartdoc_runner/utils/retry.dart';
+import 'package:logging/logging.dart';
+
+Logger _logger = new Logger("storage");
 
 class Storage {
-  static const _scopes = const [StorageApi.DevstorageReadWriteScope];
+  static const _scopes = const [s.StorageApi.DevstorageReadWriteScope];
 
   final Config config;
 
-  Future<StorageApi> _storageApiInst;
+  Future<s.StorageApi> _storageApiInst;
 
   Storage(this.config);
-  Future<StorageApi> get _storageApi async {
+  Future<s.StorageApi> get _storageApi async {
     if (_storageApiInst == null) {
       _storageApiInst = clientViaServiceAccount(config.credentials, _scopes).then((httpClient) {
-        return new StorageApi(httpClient);
+        return new s.StorageApi(httpClient);
       });
     }
     return _storageApiInst;
   }
 
-  Future<Null> insertFile(String path, File file, {String contentType}) async {
+  Future<Null> insertFile(String path, File file, {String contentType, int maxAge: 3600}) async {
     contentType = contentType ?? _getContentType(path);
     var stream = file.openRead().transform(GZIP.encoder);
-    var media = new Media(stream, null, contentType: contentType);
+    var media = new s.Media(stream, null, contentType: contentType);
     await retry(() async {
-      return (await _storageApi).objects.insert(null, config.bucket,
-          uploadOptions: UploadOptions.Resumable,
+      return (await _storageApi).objects.insert(new s.Object.fromJson({"cacheControl": "public, max-age=$maxAge"}), config.bucket,
+          uploadOptions: s.UploadOptions.Resumable,
           contentEncoding: "gzip",
           name: path,
           uploadMedia: media,
@@ -41,7 +44,7 @@ class Storage {
   }
 
   Future<Null> insertKey(String path) async {
-    var media = new Media(new Stream.empty(), 0, contentType: "text/plain");
+    var media = new s.Media(new Stream.empty(), 0, contentType: "text/plain");
     await retry(() async {
       return (await _storageApi)
           .objects

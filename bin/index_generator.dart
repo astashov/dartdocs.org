@@ -11,6 +11,7 @@ import 'package:dartdoc_runner/datastore_retriever.dart';
 import 'package:dartdoc_runner/uploaders/index_uploader.dart';
 import 'package:logging/logging.dart';
 import 'package:dartdoc_runner/datastore.dart';
+import 'package:dartdoc_runner/cleaners/cdn_cleaner.dart';
 
 main(List<String> args) async {
   logging.initialize();

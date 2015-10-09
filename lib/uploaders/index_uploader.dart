@@ -20,7 +20,7 @@ class IndexUploader {
     _logger.info("Uploading index files...");
     await storage.insertFile("404.html", new File(p.join(config.outputDir, "404.html")));
     await Future.wait(MenuItem.all.map((menuItem) {
-      return storage.insertFile(menuItem.url, new File(p.join(config.outputDir, menuItem.url)));
+      return storage.insertFile(menuItem.url, new File(p.join(config.outputDir, menuItem.url)), maxAge: 60);
     }));
   }
 }

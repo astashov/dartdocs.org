@@ -18,6 +18,7 @@ import 'dart:math';
 import 'package:dartdoc_runner/datastore.dart';
 import 'dart:async';
 import 'package:dartdoc_runner/version.dart';
+import 'package:dartdoc_runner/cleaners/cdn_cleaner.dart';
 
 class _PackageGenerator {
   final Config config;
@@ -26,13 +27,14 @@ class _PackageGenerator {
   final Datastore datastore;
   final DatastoreRetriever datastoreRetriever;
   final PackageGenerator generator;
-  final PackageCleaner cleaner;
+  final PackageCleaner packageCleaner;
+  final CdnCleaner cdnCleaner;
   final PackageUploader uploader;
 
   int docsVersion;
 
   _PackageGenerator(this.config, this.pubRetriever, this.storage, this.datastore, this.datastoreRetriever,
-      this.generator, this.cleaner, this.uploader);
+      this.generator, this.packageCleaner, this.cdnCleaner, this.uploader);
 
   factory _PackageGenerator.build() {
     var config = new Config.buildFromFiles("config.yaml", "credentials.yaml");
@@ -41,10 +43,11 @@ class _PackageGenerator {
     var datastore = new Datastore(config);
     var storageRetriever = new DatastoreRetriever(config, datastore);
     var generator = new PackageGenerator(config);
-    var cleaner = new PackageCleaner(config);
+    var packageCleaner = new PackageCleaner(config);
+    var cdnCleaner = new CdnCleaner(config);
     var uploader = new PackageUploader(config, storage);
     return new _PackageGenerator(
-        config, pubRetriever, storage, datastore, storageRetriever, generator, cleaner, uploader);
+        config, pubRetriever, storage, datastore, storageRetriever, generator, packageCleaner, cdnCleaner, uploader);
   }
 
   Future<Null> initialize() async {
@@ -58,7 +61,7 @@ class _PackageGenerator {
     var shard = await getShard(config);
     allPackages.removeAll(datastoreRetriever.allPackages);
     _logger.info("The number of the new packages - ${allPackages.length}");
-    return shard.part(allPackages.toList()).getRange(0, min(10, allPackages.length));
+    return shard.part(allPackages.toList()).getRange(0, min(1, allPackages.length));
   }
 
   Future<Null> handlePackages(Iterable<Package> packages) async {
@@ -74,7 +77,7 @@ class _PackageGenerator {
     await Future.wait(erroredPackages.map((package) async {
       return datastore.upsert(package, docsVersion, status: "error");
     }));
-    await cleaner.delete(packages);
+    await packageCleaner.delete(packages);
   }
 }
 
