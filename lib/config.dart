@@ -5,8 +5,10 @@ import 'dart:io';
 
 import 'package:googleapis_auth/auth.dart';
 import 'package:yaml/yaml.dart' as yaml;
+import 'package:path/path.dart' as p;
 
 class Config {
+  final String dirroot;
   final String dartSdkPath;
   final String bucket;
   final String pubCacheDir;
@@ -24,12 +26,14 @@ class Config {
   final int concurrencyCount;
   final ServiceAccountCredentials credentials;
 
-  factory Config.buildFromFiles(String configFile, String credentialsFile) {
-    var configValues = yaml.loadYaml(new File(configFile).readAsStringSync());
-    var credentialsValues = yaml.loadYaml(new File(credentialsFile).readAsStringSync());
+  factory Config.buildFromFiles(String dirroot, String configFile, String credentialsFile) {
+    dirroot ??= Directory.current.path;
+    var configValues = yaml.loadYaml(new File(p.join(dirroot, configFile)).readAsStringSync());
+    var credentialsValues = yaml.loadYaml(new File(p.join(dirroot, credentialsFile)).readAsStringSync());
     var cloudflareValues = credentialsValues["cloudflare"];
     var serviceAccountCredentials = new ServiceAccountCredentials.fromJson(JSON.encode(credentialsValues["google_cloud"]));
     return new Config._(
+        dirroot,
         configValues["dart_sdk"],
         configValues["bucket"],
         configValues["pub_cache_dir"],
@@ -49,6 +53,7 @@ class Config {
   }
 
   Config._(
+      this.dirroot,
       this.dartSdkPath,
       this.bucket,
       this.pubCacheDir,

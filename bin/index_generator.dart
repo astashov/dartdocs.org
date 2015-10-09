@@ -11,11 +11,19 @@ import 'package:dartdoc_runner/datastore_retriever.dart';
 import 'package:dartdoc_runner/uploaders/index_uploader.dart';
 import 'package:logging/logging.dart';
 import 'package:dartdoc_runner/datastore.dart';
-import 'package:dartdoc_runner/cleaners/cdn_cleaner.dart';
+import 'package:args/args.dart';
 
 main(List<String> args) async {
+  var parser = new ArgParser();
+  parser.addOption('dirroot');
+  parser.addFlag('help', negatable: false);
+  var argsResults = parser.parse(args);
+  if (argsResults["help"]) {
+    print(parser.usage);
+    exit(0);
+  }
   logging.initialize();
-  var config = new Config.buildFromFiles("config.yaml", "credentials.yaml");
+  var config = new Config.buildFromFiles(argsResults["dirroot"], "config.yaml", "credentials.yaml");
   var datastore = new Datastore(config);
   var storage = new Storage(config);
   var datastoreRetriever = new DatastoreRetriever(config, datastore);

@@ -36,8 +36,8 @@ class _PackageGenerator {
   _PackageGenerator(this.config, this.pubRetriever, this.storage, this.datastore, this.datastoreRetriever,
       this.generator, this.packageCleaner, this.cdnCleaner, this.uploader);
 
-  factory _PackageGenerator.build() {
-    var config = new Config.buildFromFiles("config.yaml", "credentials.yaml");
+  factory _PackageGenerator.build(String dirroot) {
+    var config = new Config.buildFromFiles(dirroot, "config.yaml", "credentials.yaml");
     var pubRetriever = new PubRetriever();
     var storage = new Storage(config);
     var datastore = new Datastore(config);
@@ -84,6 +84,7 @@ class _PackageGenerator {
 main(List<String> args) async {
   var parser = new ArgParser();
   parser.addOption('name');
+  parser.addOption('dirroot');
   parser.addOption('version');
   parser.addFlag('help', negatable: false);
   var argsResults = parser.parse(args);
@@ -92,7 +93,7 @@ main(List<String> args) async {
     exit(0);
   }
   logging.initialize();
-  var packageGenerator = new _PackageGenerator.build();
+  var packageGenerator = new _PackageGenerator.build(argsResults["dirroot"]);
 
   if (argsResults["name"] != null && argsResults["version"] != null) {
     await packageGenerator.initialize();
