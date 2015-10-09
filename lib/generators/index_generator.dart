@@ -2,6 +2,7 @@ library dartdoc_runner.index_generator;
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:dartdoc_runner/config.dart';
 import 'package:dartdoc_runner/package.dart';
@@ -77,6 +78,21 @@ class IndexGenerator {
     await writeToFile(MenuItem.home.url, html.toString());
   }
 
+  Future<Null> generateJsonIndex(Iterable<Package> packages) async {
+    var finalMap = packages.fold({}, (Map memo, Package package) {
+      if (memo[package.name] == null) {
+        memo[package.name] = {};
+      }
+      var url = "${config.hostedUrl}/${package.url(config)}";
+      memo[package.name][package.version.toString()] = {
+        "html": "$url/index.html",
+        "archive": "$url/package.tar.gz"
+      };
+      return memo;
+    });
+    await writeToFile("index.json", JSON.encode(finalMap));
+  }
+
   Future<Null> generate404() async {
     var html = new StringBuffer();
     html.writeln(_generateHeader());
@@ -140,3 +156,5 @@ class MenuItem {
     return "<li${isActive ? " class='active'" : ""}><a href='/$url'>$title</a></li>";
   }
 }
+
+final Iterable<String> allIndexUrls = []..addAll(MenuItem.all.map((mi) => mi.url))..add("index.json");

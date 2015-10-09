@@ -24,7 +24,7 @@ class CdnCleaner {
 
   Future<Null> purgeIndex() async {
     _logger.info("Cleaning the CDN cache for the index pages");
-    var relativePaths = []..add("")..addAll(MenuItem.all.map((menuItem) => menuItem.url));
+    var relativePaths = []..add("")..addAll(allIndexUrls);
     return _purgeFiles(relativePaths);
   }
 

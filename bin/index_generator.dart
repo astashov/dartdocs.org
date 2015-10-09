@@ -35,6 +35,7 @@ main(List<String> args) async {
     if (previousSuccessfulPackagesLength != successPackages.length) {
       _logger.info("There are new packages available, regenerating the index");
       await indexGenerator.generateHome(successPackages);
+      await indexGenerator.generateJsonIndex(successPackages);
       _logger.info("Done");
     }
 
