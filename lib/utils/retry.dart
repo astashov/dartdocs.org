@@ -19,8 +19,8 @@ Future<dynamic> retry(body(), {int number: 3, Iterable<Duration> durations: _def
         newDurations.removeAt(0);
       }
       var newNumber = number - 1;
-      _logger
-          .warning("Got an exception: $error, retrying, retries left: $newNumber, waiting for ${duration.inSeconds}s");
+      _logger.warning(
+          "Got an exception: $error, retrying, retries left: $newNumber, waiting for ${duration.inSeconds}s");
       return new Future.delayed(duration, () => retry(body, number: newNumber, durations: newDurations));
     } else {
       _logger.warning("Got an exception: $error, out of retries, rethrowing...");

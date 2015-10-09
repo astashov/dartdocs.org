@@ -39,6 +39,7 @@ class PackageGenerator {
             "--add-crossdart",
             "--dart-sdk=${config.dartSdkPath}"
           ]);
+          await _archivePackage(logs, package);
         } on RunCommandError catch (e, s) {
           _addLog(logs, Level.WARNING, "Got RunCommandError exception,\nstdout: ${e.stdout},\nstderr: ${e.stderr}");
           erroredPackages.add(package);
@@ -95,6 +96,14 @@ class PackageGenerator {
     var file = new File(path.join(package.outputDir(config), "log.txt"));
     var contents = logs.map((logRecord) => logging.logFormatter(logRecord)).join("\n");
     await file.writeAsString(contents);
+  }
+
+  Future<Null> _archivePackage(List<LogRecord> logs, Package package) async {
+    var workingDir = path.join(config.outputDir, config.gcsPrefix);
+    var archivePath = path.join(config.outputDir, config.gcsPrefix, "${package.fullName}.tar.gz");
+    await _runCommand(logs, "tar", [
+        "-C", workingDir, "-czf", archivePath, path.join(package.name, package.version.toString())]);
+    await new File(archivePath).rename(path.join(package.outputDir(config), "package.tar.gz"));
   }
 }
 
