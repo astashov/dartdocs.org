@@ -59,14 +59,30 @@ class PackageGenerator {
   }
 
   Future<Null> _install(List<LogRecord> logs, Package package) async {
-    var pubGlobalFuture = _runCommand(logs, "pub", ["cache", "add", package.name, "-v", package.version.toString()]);
+    RunCommandError potentialFailure;
+    try {
+      var pubGlobalFuture = _runCommand(logs, "pub", ["cache", "add", package.name, "-v", package.version.toString()]);
 
-    await pubGlobalFuture.timeout(new Duration(seconds: 30), onTimeout: () {
-      throw new RunCommandError("Install error - timeout", "");
-    });
-
+      await pubGlobalFuture.timeout(new Duration(seconds: 30), onTimeout: () {
+        throw new RunCommandError("Install error - timeout", "");
+      });
+      throw new RunCommandError("Blah", "Foo");
+    } on RunCommandError catch (e, _) {
+      potentialFailure = e;
+      _addLog(logs, Level.WARNING, "While installing, got RunCommandError exception,\nstdout: ${e.stdout},\nstderr: ${e.stderr}");
+    }
     var workingDirectory = package.pubCacheDir(config);
-    await _runCommand(logs, "pub", ["get"], workingDirectory: workingDirectory);
+
+    if (new Directory(workingDirectory).existsSync()) {
+      try {
+        await _runCommand(logs, "pub", ["get"], workingDirectory: workingDirectory);
+        throw new RunCommandError("Blah2", "Foo2");
+      } on RunCommandError catch (e, _) {
+        _addLog(logs, Level.WARNING, "While doing pub get, got RunCommandError exception,\nstdout: ${e.stdout},\nstderr: ${e.stderr}");
+      }
+    } else if (potentialFailure != null) {
+      throw potentialFailure;
+    }
   }
 
   Future _runCommand(List<LogRecord> logs, String command, Iterable<String> arguments,
