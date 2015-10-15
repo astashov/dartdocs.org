@@ -36,6 +36,7 @@ class PackageGenerator {
             "--input=${package.pubCacheDir(config)}",
             "--output=${package.outputDir(config)}",
             "--hosted-url=${config.hostedUrl}",
+            "--header=${path.join(config.dirroot, "resources", "redirector.html")}",
             "--add-crossdart",
             "--dart-sdk=${config.dartSdkPath}"
           ]);
