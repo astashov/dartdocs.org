@@ -40,8 +40,8 @@ class PubRetriever {
       } else {
         _currentList.addAll(packages);
       }
-      //} while (json["next"] != null);
-    } while (page < 2);
+    } while (json["next"] != null);
+    //} while (page < 2);
 
     _logger.info("The number of the available packages - ${_currentList.length}");
     return _currentList;

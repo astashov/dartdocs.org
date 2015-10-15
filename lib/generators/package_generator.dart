@@ -29,15 +29,11 @@ class PackageGenerator {
         try {
           await _runCommand(logs, "pub", ["--version"]);
           await _install(logs, package);
-          await _runCommand(logs, "pub", [
-            "global",
-            "run",
-            "dartdoc",
+          await _runCommand(logs, "dartdoc", [
             "--input=${package.pubCacheDir(config)}",
             "--output=${package.outputDir(config)}",
             "--hosted-url=${config.hostedUrl}",
             "--header=${path.join(config.dirroot, "resources", "redirector.html")}",
-            "--add-crossdart",
             "--dart-sdk=${config.dartSdkPath}"
           ]);
           await _archivePackage(logs, package);

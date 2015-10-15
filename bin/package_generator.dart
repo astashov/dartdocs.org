@@ -52,7 +52,6 @@ class _PackageGenerator {
 
   Future<Null> initialize() async {
     this.docsVersion = await datastore.docsVersion();
-    await generator.activateDartdoc();
   }
 
   Future<Iterable<Package>> retrieveNextPackages() async {
