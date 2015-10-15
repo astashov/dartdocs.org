@@ -34,6 +34,7 @@ class PackageGenerator {
             "--output=${package.outputDir(config)}",
             "--hosted-url=${config.hostedUrl}",
             "--header=${path.join(config.dirroot, "resources", "redirector.html")}",
+            "--footer=${path.join(config.dirroot, "resources", "google_analytics.html")}",
             "--dart-sdk=${config.dartSdkPath}"
           ]);
           await _archivePackage(logs, package);
