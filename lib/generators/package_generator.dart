@@ -1,14 +1,14 @@
-library dartdoc_runner.package_generator;
+library dartdoc_generator.package_generator;
 
 import 'dart:async';
 import 'dart:io';
 
-import 'package:dartdoc_runner/config.dart';
-import 'package:dartdoc_runner/logging.dart' as logging;
-import 'package:dartdoc_runner/package.dart';
+import 'package:dartdoc_generator/config.dart';
+import 'package:dartdoc_generator/logging.dart' as logging;
+import 'package:dartdoc_generator/package.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
-import 'package:dartdoc_runner/utils.dart';
+import 'package:dartdoc_generator/utils.dart';
 
 var _logger = new Logger("package_generator");
 

@@ -1,16 +1,16 @@
-library dartdoc_runner.bin.index_generator;
+library dartdoc_generator.bin.index_generator;
 
 import 'dart:io';
 import 'dart:math';
 
-import 'package:dartdoc_runner/config.dart';
-import 'package:dartdoc_runner/generators/index_generator.dart';
-import 'package:dartdoc_runner/logging.dart' as logging;
-import 'package:dartdoc_runner/storage.dart';
-import 'package:dartdoc_runner/datastore_retriever.dart';
-import 'package:dartdoc_runner/uploaders/index_uploader.dart';
+import 'package:dartdoc_generator/config.dart';
+import 'package:dartdoc_generator/generators/index_generator.dart';
+import 'package:dartdoc_generator/logging.dart' as logging;
+import 'package:dartdoc_generator/storage.dart';
+import 'package:dartdoc_generator/datastore_retriever.dart';
+import 'package:dartdoc_generator/uploaders/index_uploader.dart';
 import 'package:logging/logging.dart';
-import 'package:dartdoc_runner/datastore.dart';
+import 'package:dartdoc_generator/datastore.dart';
 import 'package:args/args.dart';
 
 main(List<String> args) async {

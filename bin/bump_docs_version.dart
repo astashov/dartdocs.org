@@ -1,11 +1,11 @@
-library dartdoc_runner.bin.bump_docs_version;
+library dartdoc_generator.bin.bump_docs_version;
 
 import 'dart:io';
 
-import 'package:dartdoc_runner/config.dart';
-import 'package:dartdoc_runner/logging.dart' as logging;
+import 'package:dartdoc_generator/config.dart';
+import 'package:dartdoc_generator/logging.dart' as logging;
 import 'package:logging/logging.dart';
-import 'package:dartdoc_runner/datastore.dart';
+import 'package:dartdoc_generator/datastore.dart';
 import 'package:intl/intl.dart';
 import 'package:args/args.dart';
 

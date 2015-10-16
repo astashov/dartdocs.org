@@ -1,13 +1,13 @@
-library dartdoc_runner.datastore;
+library dartdoc_generator.datastore;
 
 import 'dart:async';
 
-import 'package:dartdoc_runner/config.dart';
+import 'package:dartdoc_generator/config.dart';
 import 'package:googleapis_beta/datastore/v1beta2.dart';
 import 'package:googleapis_auth/auth_io.dart';
-import 'package:dartdoc_runner/package.dart';
-import 'package:dartdoc_runner/version.dart';
-import 'package:dartdoc_runner/utils/retry.dart';
+import 'package:dartdoc_generator/package.dart';
+import 'package:dartdoc_generator/version.dart';
+import 'package:dartdoc_generator/utils/retry.dart';
 import 'package:logging/logging.dart';
 
 Logger _logger = new Logger("datastore");

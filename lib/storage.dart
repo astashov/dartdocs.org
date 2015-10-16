@@ -1,13 +1,13 @@
-library dartdoc_runner.storage;
+library dartdoc_generator.storage;
 
 import 'dart:async';
 import 'dart:io';
 
-import 'package:dartdoc_runner/config.dart';
+import 'package:dartdoc_generator/config.dart';
 import 'package:googleapis/storage/v1.dart' as s;
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:path/path.dart' as p;
-import 'package:dartdoc_runner/utils/retry.dart';
+import 'package:dartdoc_generator/utils/retry.dart';
 import 'package:logging/logging.dart';
 
 Logger _logger = new Logger("storage");

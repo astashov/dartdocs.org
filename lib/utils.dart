@@ -1,4 +1,4 @@
-library dartdoc_runner.utils;
+library dartdoc_generator.utils;
 
 Map groupBy(Iterable collection, bool condition(i)) {
   return collection.fold({}, (memo, item) {

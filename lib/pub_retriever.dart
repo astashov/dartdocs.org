@@ -1,13 +1,13 @@
-library dartdoc_runner.pub_retriever;
+library dartdoc_generator.pub_retriever;
 
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:dartdoc_runner/package.dart';
-import 'package:dartdoc_runner/version.dart';
+import 'package:dartdoc_generator/package.dart';
+import 'package:dartdoc_generator/version.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
-import 'package:dartdoc_runner/utils/retry.dart';
+import 'package:dartdoc_generator/utils/retry.dart';
 
 var _logger = new Logger("pub_retriever");
 

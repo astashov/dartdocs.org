@@ -1,24 +1,24 @@
-library dartdoc_runner.bin.package_generator;
+library dartdoc_generator.bin.package_generator;
 
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:dartdoc_runner/config.dart';
-import 'package:dartdoc_runner/generators/package_generator.dart';
-import 'package:dartdoc_runner/logging.dart' as logging;
-import 'package:dartdoc_runner/package.dart';
-import 'package:dartdoc_runner/pub_retriever.dart';
-import 'package:dartdoc_runner/shard.dart';
-import 'package:dartdoc_runner/storage.dart';
-import 'package:dartdoc_runner/datastore_retriever.dart';
-import 'package:dartdoc_runner/uploaders/package_uploader.dart';
+import 'package:dartdoc_generator/config.dart';
+import 'package:dartdoc_generator/generators/package_generator.dart';
+import 'package:dartdoc_generator/logging.dart' as logging;
+import 'package:dartdoc_generator/package.dart';
+import 'package:dartdoc_generator/pub_retriever.dart';
+import 'package:dartdoc_generator/shard.dart';
+import 'package:dartdoc_generator/storage.dart';
+import 'package:dartdoc_generator/datastore_retriever.dart';
+import 'package:dartdoc_generator/uploaders/package_uploader.dart';
 import 'package:logging/logging.dart';
-import 'package:dartdoc_runner/cleaners/package_cleaner.dart';
+import 'package:dartdoc_generator/cleaners/package_cleaner.dart';
 import 'dart:math';
-import 'package:dartdoc_runner/datastore.dart';
+import 'package:dartdoc_generator/datastore.dart';
 import 'dart:async';
-import 'package:dartdoc_runner/version.dart';
-import 'package:dartdoc_runner/cleaners/cdn_cleaner.dart';
+import 'package:dartdoc_generator/version.dart';
+import 'package:dartdoc_generator/cleaners/cdn_cleaner.dart';
 
 class _PackageGenerator {
   final Config config;

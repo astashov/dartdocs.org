@@ -1,6 +1,6 @@
-library dartdoc_runner.version;
+library dartdoc_generator.version;
 
-import 'package:dartdoc_runner/utils.dart';
+import 'package:dartdoc_generator/utils.dart';
 
 final RegExp _versionRegexp = new RegExp(r"^(\d+)\.(\d+)\.(\d+)(.*)$");
 

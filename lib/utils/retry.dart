@@ -1,4 +1,4 @@
-library dartdoc_runner.utils.retry;
+library dartdoc_generator.utils.retry;
 
 import 'dart:async';
 import 'package:logging/logging.dart';

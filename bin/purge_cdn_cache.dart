@@ -1,11 +1,11 @@
-library dartdoc_runner.bin.purge_cdn_cache;
+library dartdoc_generator.bin.purge_cdn_cache;
 
 import 'dart:io';
 
-import 'package:dartdoc_runner/config.dart';
-import 'package:dartdoc_runner/logging.dart' as logging;
+import 'package:dartdoc_generator/config.dart';
+import 'package:dartdoc_generator/logging.dart' as logging;
 import 'package:logging/logging.dart';
-import 'package:dartdoc_runner/cleaners/cdn_cleaner.dart';
+import 'package:dartdoc_generator/cleaners/cdn_cleaner.dart';
 import 'package:args/args.dart';
 
 main(List<String> args) async {

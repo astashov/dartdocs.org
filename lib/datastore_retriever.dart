@@ -1,10 +1,10 @@
-library dartdoc_runner.datastore_retriever;
+library dartdoc_generator.datastore_retriever;
 
 import 'dart:async';
 
-import 'package:dartdoc_runner/config.dart';
-import 'package:dartdoc_runner/package.dart';
-import 'package:dartdoc_runner/datastore.dart';
+import 'package:dartdoc_generator/config.dart';
+import 'package:dartdoc_generator/package.dart';
+import 'package:dartdoc_generator/datastore.dart';
 import 'package:logging/logging.dart';
 
 var _logger = new Logger("datastore_retriever");

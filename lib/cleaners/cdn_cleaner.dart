@@ -1,4 +1,4 @@
-library dartdoc_runner.cleaners.cdn_cleaner;
+library dartdoc_generator.cleaners.cdn_cleaner;
 
 import 'dart:async';
 import 'dart:io';
@@ -6,12 +6,12 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:path/path.dart' as p;
-import 'package:dartdoc_runner/config.dart';
-import 'package:dartdoc_runner/package.dart';
+import 'package:dartdoc_generator/config.dart';
+import 'package:dartdoc_generator/package.dart';
 import 'package:logging/logging.dart';
-import 'package:dartdoc_runner/utils/retry.dart';
-import 'package:dartdoc_runner/generators/index_generator.dart';
-import 'package:dartdoc_runner/utils.dart';
+import 'package:dartdoc_generator/utils/retry.dart';
+import 'package:dartdoc_generator/generators/index_generator.dart';
+import 'package:dartdoc_generator/utils.dart';
 
 var _logger = new Logger("cdn_cleaner");
 
