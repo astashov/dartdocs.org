@@ -35,6 +35,7 @@ class Storage {
     var stream = file.openRead().transform(GZIP.encoder);
     var media = new s.Media(stream, length, contentType: contentType);
     await retry(() async {
+      _logger.fine("Uploading $path");
       return (await _storageApi).objects.insert(new s.Object.fromJson({"cacheControl": "public, max-age=$maxAge"}), config.bucket,
           contentEncoding: "gzip",
           name: path,
