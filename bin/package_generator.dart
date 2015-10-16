@@ -16,6 +16,7 @@ import 'package:logging/logging.dart';
 import 'package:dartdoc_generator/cleaners/package_cleaner.dart';
 import 'package:dartdoc_generator/datastore.dart';
 import 'dart:async';
+import 'dart:math';
 import 'package:dartdoc_generator/version.dart';
 import 'package:dartdoc_generator/cleaners/cdn_cleaner.dart';
 
@@ -59,7 +60,7 @@ class _PackageGenerator {
     var shard = await getShard(config);
     allPackages.removeWhere((p) => datastoreRetriever.allPackages.contains(p));
     _logger.info("The number of the new packages - ${allPackages.length}");
-    return shard.part(allPackages);
+    return shard.part(allPackages).getRange(0, min(20, allPackages.length));
   }
 
   Future<Null> handlePackages(Iterable<Package> packages) async {
