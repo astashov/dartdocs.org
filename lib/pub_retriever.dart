@@ -14,11 +14,11 @@ var _logger = new Logger("pub_retriever");
 String _getUrl(int page) => "https://pub.dartlang.org/packages.json?page=$page";
 
 class PubRetriever {
-  Set<Package> _currentList = new Set();
+  List<Package> _currentList = [];
 
   PubRetriever();
 
-  Future<Set<Package>> update() async {
+  Future<List<Package>> update() async {
     _logger.info("Retrieving available packages...");
     var page = 1;
 
@@ -35,7 +35,7 @@ class PubRetriever {
           return new Package(packageMap["name"], new Version(version));
         });
       }).expand((i) => i);
-      if (_currentList.containsAll(packages)) {
+      if (packages.every((p) => _currentList.contains(p))) {
         break;
       } else {
         _currentList.addAll(packages);

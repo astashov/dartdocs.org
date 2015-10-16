@@ -26,7 +26,7 @@ main(List<String> args) async {
   var config = new Config.buildFromFiles(argsResults["dirroot"], "config.yaml", "credentials.yaml");
   var datastore = new Datastore(config);
   var storage = new Storage(config);
-  var datastoreRetriever = new DatastoreRetriever(config, datastore);
+  var datastoreRetriever = new DatastoreRetriever(datastore);
   var indexGenerator = new IndexGenerator(config);
   var indexUploader = new IndexUploader(config, storage);
   await datastoreRetriever.update();

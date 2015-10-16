@@ -9,4 +9,3 @@ gc_zone: us-central1-f
 gc_group_name: dartdocs-package-generators
 bucket: www.dartdocs2.com
 install_timeout: 30
-concurrency_count: 1

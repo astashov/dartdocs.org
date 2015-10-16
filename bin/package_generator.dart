@@ -14,7 +14,6 @@ import 'package:dartdoc_generator/datastore_retriever.dart';
 import 'package:dartdoc_generator/uploaders/package_uploader.dart';
 import 'package:logging/logging.dart';
 import 'package:dartdoc_generator/cleaners/package_cleaner.dart';
-import 'dart:math';
 import 'package:dartdoc_generator/datastore.dart';
 import 'dart:async';
 import 'package:dartdoc_generator/version.dart';
@@ -41,7 +40,7 @@ class _PackageGenerator {
     var pubRetriever = new PubRetriever();
     var storage = new Storage(config);
     var datastore = new Datastore(config);
-    var storageRetriever = new DatastoreRetriever(config, datastore);
+    var storageRetriever = new DatastoreRetriever(datastore);
     var generator = new PackageGenerator(config);
     var packageCleaner = new PackageCleaner(config);
     var cdnCleaner = new CdnCleaner(config);
@@ -55,12 +54,12 @@ class _PackageGenerator {
   }
 
   Future<Iterable<Package>> retrieveNextPackages() async {
-    Set<Package> allPackages = (await pubRetriever.update());
+    List<Package> allPackages = (await pubRetriever.update());
     await datastoreRetriever.update(docsVersion);
     var shard = await getShard(config);
-    allPackages.removeAll(datastoreRetriever.allPackages);
+    allPackages.removeWhere((p) => datastoreRetriever.allPackages.contains(p));
     _logger.info("The number of the new packages - ${allPackages.length}");
-    return shard.part(allPackages.toList()).getRange(0, min(1, allPackages.length));
+    return shard.part(allPackages);
   }
 
   Future<Null> handlePackages(Iterable<Package> packages) async {

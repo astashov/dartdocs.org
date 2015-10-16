@@ -23,7 +23,6 @@ class Config {
   final String cloudflareEmail;
   final String cloudflareZone;
   final int installTimeout;
-  final int concurrencyCount;
   final ServiceAccountCredentials credentials;
 
   factory Config.buildFromFiles(String dirroot, String configFile, String credentialsFile) {
@@ -48,7 +47,6 @@ class Config {
         cloudflareValues["email"],
         cloudflareValues["zone"],
         configValues["install_timeout"],
-        configValues["concurrency_count"],
         serviceAccountCredentials);
   }
 
@@ -68,6 +66,5 @@ class Config {
       this.cloudflareEmail,
       this.cloudflareZone,
       this.installTimeout,
-      this.concurrencyCount,
       this.credentials);
 }

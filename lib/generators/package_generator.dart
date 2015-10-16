@@ -63,7 +63,7 @@ class PackageGenerator {
     try {
       var pubGlobalFuture = _runCommand(logs, "pub", ["cache", "add", package.name, "-v", package.version.toString()]);
 
-      await pubGlobalFuture.timeout(new Duration(seconds: 30), onTimeout: () {
+      await pubGlobalFuture.timeout(new Duration(seconds: config.installTimeout), onTimeout: () {
         throw new RunCommandError("Install error - timeout", "");
       });
     } on RunCommandError catch (e, _) {

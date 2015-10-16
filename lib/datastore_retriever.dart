@@ -2,7 +2,6 @@ library dartdoc_generator.datastore_retriever;
 
 import 'dart:async';
 
-import 'package:dartdoc_generator/config.dart';
 import 'package:dartdoc_generator/package.dart';
 import 'package:dartdoc_generator/datastore.dart';
 import 'package:logging/logging.dart';
@@ -15,10 +14,9 @@ class DatastoreRetriever {
   DateTime _lastUpdatedAt;
   int _lastDocsVersion;
 
-  final Config _config;
   final Datastore _datastore;
 
-  DatastoreRetriever(this._config, this._datastore);
+  DatastoreRetriever(this._datastore);
 
   Set<Package> get allPackages => new Set()..addAll(successPackages)..addAll(errorPackages);
   Set<Package> get errorPackages => _errorList;
