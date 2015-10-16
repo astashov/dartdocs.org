@@ -10,7 +10,7 @@ void initialize([int index]) {
     }
   });
 
-  Logger.root.level = Level.INFO;
+  Logger.root.level = Level.FINE;
 }
 
 String logFormatter(LogRecord record, {int index, bool shouldConvertToPTZ: false}) {
