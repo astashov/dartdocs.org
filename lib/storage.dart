@@ -31,11 +31,11 @@ class Storage {
 
   Future<Null> insertFile(String path, File file, {String contentType, int maxAge: 3600}) async {
     contentType = contentType ?? _getContentType(path);
+    var length = await file.openRead().transform(GZIP.encoder).fold(0, (memo, b) => memo + b.length);
     var stream = file.openRead().transform(GZIP.encoder);
-    var media = new s.Media(stream, null, contentType: contentType);
+    var media = new s.Media(stream, length, contentType: contentType);
     await retry(() async {
       return (await _storageApi).objects.insert(new s.Object.fromJson({"cacheControl": "public, max-age=$maxAge"}), config.bucket,
-          uploadOptions: s.UploadOptions.Resumable,
           contentEncoding: "gzip",
           name: path,
           uploadMedia: media,
