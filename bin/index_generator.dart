@@ -67,7 +67,8 @@ main(List<String> args) async {
       await indexUploader.uploadIndexFiles();
     }
 
-    previousSuccessfulPackagesLength = errorPackages.length;
+    previousSuccessfulPackagesLength = successPackages.length;
+    previousErroredPackagesLength = errorPackages.length;
     var duration = new Duration(minutes: 1);
     _logger.info("Waiting for ${duration.inSeconds}s...");
     sleep(duration);

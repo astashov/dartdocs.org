@@ -1,5 +1,6 @@
 # Creates indexes for meta information about packages stored in Google Datastore
 # To apply changes, do 'gcloud preview datastore create-indexes index.yaml'
+# To cleanup 'gcloud preview datastore cleanup-indexes index.yaml'
 
 indexes:
 

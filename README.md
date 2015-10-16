@@ -1,1 +1,3 @@
 Something gonna be here soon...
+
+gcloud compute instance-groups managed resize dartdocs-package-generators --size 0 --zone us-central1-f
