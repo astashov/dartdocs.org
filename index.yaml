@@ -1,0 +1,23 @@
+# Creates indexes for meta information about packages stored in Google Datastore
+# To apply changes, do 'gcloud preview datastore create-indexes index.yaml'
+
+indexes:
+
+- kind: Package
+  ancestor: false
+  properties:
+  - name: docsVersion
+  - name: status
+  - name: updatedAt
+
+- kind: Package
+  ancestor: false
+  properties:
+  - name: docsVersion
+  - name: status
+
+- kind: Package
+  ancestor: false
+  properties:
+  - name: status
+  - name: updatedAt

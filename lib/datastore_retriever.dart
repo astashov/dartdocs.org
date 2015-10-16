@@ -12,6 +12,8 @@ var _logger = new Logger("datastore_retriever");
 class DatastoreRetriever {
   Set<Package> _successList = new Set();
   Set<Package> _errorList = new Set();
+  DateTime _lastUpdatedAt;
+  int _lastDocsVersion;
 
   final Config _config;
   final Datastore _datastore;
@@ -23,9 +25,21 @@ class DatastoreRetriever {
   Set<Package> get successPackages => _successList;
 
   Future<Null> update([int docsVersion]) async {
-    // TODO: Use updatedAt to avoid retrieving the whole list every time.
-    // TODO: Then, in this case we need to clear the lists once docsVersion is changed
-    _successList = await _datastore.getPackages(docsVersion: docsVersion, status: "success");
-    _errorList = await _datastore.getPackages(docsVersion: docsVersion, status: "error");
+    if (_lastUpdatedAt == null || docsVersion != _lastDocsVersion) {
+      _logger.info("Retrieving the initial list of meta packages from Google Datastore");
+      _lastUpdatedAt = new DateTime.now();
+      _successList = (await _datastore.getPackages(docsVersion: docsVersion, status: "success")).toSet();
+      _errorList = (await _datastore.getPackages(docsVersion: docsVersion, status: "error")).toSet();
+      _logger.info("Successful packages - ${successPackages.length}, erroneous packages - ${errorPackages.length}");
+      _lastDocsVersion = docsVersion;
+    } else {
+      _logger.info("Retrieving the updated list of meta packages from Google Datastore");
+      var newSuccessPackages = await _datastore.getPackages(docsVersion: docsVersion, status: "success", updatedAt: _lastUpdatedAt);
+      _successList.addAll(newSuccessPackages);
+      var newErrorPackages = await _datastore.getPackages(docsVersion: docsVersion, status: "error", updatedAt: _lastUpdatedAt);
+      _errorList.addAll(newErrorPackages);
+      _logger.info("New successful packages - ${newSuccessPackages.length}, new erroneous packages - ${newErrorPackages.length}");
+      _lastUpdatedAt = new DateTime.now();
+    }
   }
 }

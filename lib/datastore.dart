@@ -61,7 +61,7 @@ class Datastore {
           ]
         },
         "properties": {
-          "value": {"integerValue": version},
+          "value": {"integerValue": version.toString()},
         }
       }
     ]);
@@ -77,11 +77,11 @@ class Datastore {
           ]
         },
         "properties": {
-          "packageName": {"stringValue": package.name, "indexed": true},
+          "packageName": {"stringValue": package.name},
           "packageVersion": {"stringValue": package.version.toString()},
           "status": {"stringValue": status ?? "success", "indexed": true},
-          "docsVersion": {"integerValue": docsVersion, "indexed": true},
-          "updatedAt": {"dateTimeValue": updatedAt, "indexed": true}
+          "docsVersion": {"integerValue": docsVersion.toString()},
+          "updatedAt": {"dateTimeValue": updatedAt}
         }
       }
     ]);
@@ -110,7 +110,7 @@ class Datastore {
         "propertyFilter": {
           "property": {"name": "docsVersion"},
           "operator": 'EQUAL',
-          "value": {"integerValue": docsVersion}
+          "value": {"integerValue": docsVersion.toString()}
         }
       });
     }
@@ -128,7 +128,7 @@ class Datastore {
         "propertyFilter": {
           "property": {"name": "updatedAt"},
           "operator": 'GREATER_THAN_OR_EQUAL',
-          "value": {"dateTimeValue": updatedAt}
+          "value": {"dateTimeValue": updatedAt.toUtc().toIso8601String()}
         }
       });
     }
