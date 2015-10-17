@@ -81,35 +81,41 @@ class _PackageGenerator {
 }
 
 main(List<String> args) async {
-  var parser = new ArgParser();
-  parser.addOption('name');
-  parser.addOption('dirroot');
-  parser.addOption('version');
-  parser.addFlag('help', negatable: false);
-  var argsResults = parser.parse(args);
-  if (argsResults["help"]) {
-    print(parser.usage);
-    exit(0);
-  }
-  logging.initialize();
-  var packageGenerator = new _PackageGenerator.build(argsResults["dirroot"]);
+  try {
+    var parser = new ArgParser();
+    parser.addOption('name');
+    parser.addOption('dirroot');
+    parser.addOption('version');
+    parser.addFlag('help', negatable: false);
+    var argsResults = parser.parse(args);
+    if (argsResults["help"]) {
+      print(parser.usage);
+      exit(0);
+    }
+    logging.initialize();
+    var packageGenerator = new _PackageGenerator.build(argsResults["dirroot"]);
 
-  if (argsResults["name"] != null && argsResults["version"] != null) {
-    await packageGenerator.initialize();
-    var package = new Package(argsResults["name"], new Version(argsResults["version"]));
-    await packageGenerator.handlePackages([package]);
-    exit(0);
-  } else {
-    while (true) {
+    if (argsResults["name"] != null && argsResults["version"] != null) {
       await packageGenerator.initialize();
-      var packages = await packageGenerator.retrieveNextPackages();
-      if (packages.isNotEmpty) {
-        await packageGenerator.handlePackages(packages);
-      } else {
-        _logger.info("Sleeping for 3 minutes...");
-        sleep(new Duration(minutes: 3));
+      var package = new Package(argsResults["name"], new Version(argsResults["version"]));
+      await packageGenerator.handlePackages([package]);
+      exit(0);
+    } else {
+      while (true) {
+        await packageGenerator.initialize();
+        var packages = await packageGenerator.retrieveNextPackages();
+        if (packages.isNotEmpty) {
+          await packageGenerator.handlePackages(packages);
+        } else {
+          _logger.info("Sleeping for 3 minutes...");
+          sleep(new Duration(minutes: 3));
+        }
       }
     }
+  } catch (error, stackTrace) {
+    print(error);
+    print(stackTrace);
+    exit(1);
   }
 }
 

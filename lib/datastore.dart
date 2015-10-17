@@ -89,10 +89,8 @@ class Datastore {
 
   Future<CommitResponse> _upsert(List<Map> maps) async {
     DatastoreApi api = (await _datastoreApi);
-    var transaction = await retry(() async {
-      return (await (api.datasets.beginTransaction(new BeginTransactionRequest(), config.gcProjectName))).transaction;
-    });
-    return retry(() {
+    return retry(() async {
+      var transaction = (await (api.datasets.beginTransaction(new BeginTransactionRequest(), config.gcProjectName))).transaction;
       return api.datasets.commit(
           new CommitRequest.fromJson({
             "transaction": transaction,
