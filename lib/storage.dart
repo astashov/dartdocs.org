@@ -36,11 +36,15 @@ class Storage {
       var stream = file.openRead().transform(GZIP.encoder);
       var media = new s.Media(stream, length, contentType: contentType);
       _logger.fine("Uploading $path");
-      return (await _storageApi).objects.insert(new s.Object.fromJson({"cacheControl": "public, max-age=$maxAge"}), config.bucket,
+      var future = (await _storageApi).objects.insert(new s.Object.fromJson({"cacheControl": "public, max-age=$maxAge"}), config.bucket,
           contentEncoding: "gzip",
           name: path,
           uploadMedia: media,
           predefinedAcl: "publicRead");
+      var microseconds = length * 200 + 5000000; // give 5 seconds minimum
+      return future.timeout(new Duration(microseconds: microseconds), onTimeout: () {
+        throw 'Timed out ${microseconds}mks - $path';
+      });
     });
   }
 
