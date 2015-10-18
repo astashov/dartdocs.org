@@ -12,10 +12,11 @@ import 'package:args/args.dart';
 main(List<String> args) async {
   logging.initialize();
   var parser = new ArgParser();
-  parser.addOption('dirroot');
-  parser.addFlag('help', negatable: false);
+  parser.addOption('dirroot', help: "Specify the application directory, if not current");
+  parser.addFlag('help', negatable: false, help: "Show help");
   var argsResults = parser.parse(args);
   if (argsResults["help"]) {
+    print("Bumps the docsVersion global variable, which will cause regenerating all the packages from pub.\n");
     print(parser.usage);
     exit(0);
   }

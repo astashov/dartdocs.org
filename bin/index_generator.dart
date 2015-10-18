@@ -17,10 +17,11 @@ import 'dart:async';
 main(List<String> args) async {
   try {
     var parser = new ArgParser();
-    parser.addOption('dirroot');
-    parser.addFlag('help', negatable: false);
+    parser.addOption('dirroot', help: "Specify the application directory, if not current");
+    parser.addFlag('help', negatable: false, help: "Show help");
     var argsResults = parser.parse(args);
     if (argsResults["help"]) {
+      print("Generates index pages (like /index.html, /failed/index.html, etc) and uploads them to GCS in an infinite loop.\n");
       print(parser.usage);
       exit(0);
     }

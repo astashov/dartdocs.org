@@ -11,10 +11,12 @@ import 'package:args/args.dart';
 main(List<String> args) async {
   logging.initialize();
   var parser = new ArgParser();
-  parser.addOption('dirroot');
-  parser.addFlag('help', negatable: false);
+  parser.addOption('dirroot', help: "Specify the application directory, if not current");
+  parser.addFlag('help', negatable: false, help: "Show help");
   var argsResults = parser.parse(args);
   if (argsResults["help"]) {
+    print("Purges the CloudFront CDN cache for the whole site. Useful when we need "
+        "to regenerate everything with the new dartdoc verion\n");
     print(parser.usage);
     exit(0);
   }

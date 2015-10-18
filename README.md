@@ -22,7 +22,8 @@ Now, copy your credentials to credentials.yaml, and you are good to go.
 
 ## Scripts
 
-It has several scripts, which you can use to control the generation of docs:
+It has several scripts, which you can use to control the generation of docs. All scripts support `--help` arg, which
+will tell you more about the supported arguments.
 
 * `bin/package_generator.dart`
 
