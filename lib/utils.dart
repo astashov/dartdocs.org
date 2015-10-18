@@ -1,6 +1,6 @@
 library dartdoc_generator.utils;
 
-Map groupBy(Iterable collection, bool condition(i)) {
+Map groupBy(Iterable collection, condition(i)) {
   return collection.fold({}, (memo, item) {
     var key = condition(item);
     if (memo[key] == null) {
@@ -11,7 +11,7 @@ Map groupBy(Iterable collection, bool condition(i)) {
   });
 }
 
-Map groupByOne(Iterable collection, bool condition(i)) {
+Map groupByOne(Iterable collection, condition(i)) {
   return collection.fold({}, (memo, item) {
     memo[condition(item)] = item;
     return memo;
