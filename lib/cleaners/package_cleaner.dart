@@ -1,6 +1,5 @@
 library dartdoc_generator.cleaners.package_cleaner;
 
-import 'dart:async';
 import 'dart:io';
 
 import 'package:dartdoc_generator/config.dart';
@@ -16,16 +15,17 @@ class PackageCleaner {
   final Config config;
   PackageCleaner(this.config);
 
-  Future<Null> delete(Iterable packages) async {
-    var futures = packages.map((Package package) async {
-      _logger.info("Deleting output directory for the package $package");
-      await new Directory(package.outputDir(config)).delete(recursive: true);
-      if (!_usedByDartDocGeneratorPackages.contains(package)) {
-        _logger.info("Deleting pubcache directory for the package $package");
-        await new Directory(package.pubCacheDir(config)).delete(recursive: true);
+  void deleteSync() {
+    _logger.info("Cleaning old output and pub cache");
+    if (new Directory(config.outputDir).existsSync()) {
+      new Directory(config.outputDir).deleteSync(recursive: true);
+    }
+    var usedDirs = _usedByDartDocGeneratorPackages.map((p) => p.fullName).toSet();
+    new Directory(p.join(config.pubCacheDir, "hosted", "pub.dartlang.org")).listSync(recursive: false).where((e) => e is Directory).forEach((dir) {
+      if (!usedDirs.contains(p.basename(dir.path))) {
+        dir.deleteSync(recursive: true);
       }
     });
-    await Future.wait(futures);
   }
 
   Set<Package> _usedByDartDocGeneratorPackagesMemoizer;

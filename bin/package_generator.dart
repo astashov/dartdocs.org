@@ -64,6 +64,7 @@ class _PackageGenerator {
   }
 
   Future<Null> handlePackages(Iterable<Package> packages) async {
+    packageCleaner.deleteSync();
     var erroredPackages = await generator.generate(packages);
     var successfulPackages = packages.toSet()..removeAll(erroredPackages);
     await uploader.uploadSuccessfulPackages(successfulPackages);
@@ -76,7 +77,6 @@ class _PackageGenerator {
     await Future.wait(erroredPackages.map((package) async {
       return datastore.upsert(package, docsVersion, status: "error");
     }));
-    await packageCleaner.delete(packages);
   }
 }
 
