@@ -12,6 +12,7 @@ import 'package:dartdoc_generator/uploaders/index_uploader.dart';
 import 'package:logging/logging.dart';
 import 'package:dartdoc_generator/datastore.dart';
 import 'package:args/args.dart';
+import 'dart:async';
 
 main(List<String> args) async {
   try {
@@ -72,7 +73,7 @@ main(List<String> args) async {
       previousErroredPackagesLength = errorPackages.length;
       var duration = new Duration(minutes: 1);
       _logger.info("Waiting for ${duration.inSeconds}s...");
-      sleep(duration);
+      await new Future.delayed(duration);
     }
   } catch (error, stackTrace) {
     print(error);
@@ -81,4 +82,4 @@ main(List<String> args) async {
   }
 }
 
-  Logger _logger = new Logger("dartdoc_generator");
+Logger _logger = new Logger("dartdoc_generator");
