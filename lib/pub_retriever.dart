@@ -38,12 +38,16 @@ class PubRetriever {
       if (packages.every((p) => _currentList.contains(p))) {
         break;
       } else {
-        _currentList.addAll(packages);
+        packages.forEach((package) {
+          if (!_currentList.contains(package)) {
+            _currentList.add(package);
+          }
+        });
       }
     } while (json["next"] != null);
     //} while (page < 2);
 
     _logger.info("The number of the available packages - ${_currentList.length}");
-    return _currentList;
+    return new List.from(_currentList);
   }
 }
