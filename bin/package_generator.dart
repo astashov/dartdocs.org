@@ -58,6 +58,7 @@ class _PackageGenerator {
     List<Package> allPackages = (await pubRetriever.update());
     await datastoreRetriever.update(docsVersion);
     var shard = await getShard(config);
+    _logger.info("Shard: $shard");
     allPackages.removeWhere((p) => datastoreRetriever.allPackages.contains(p));
     _logger.info("The number of the new packages - ${allPackages.length}");
     return shard.part(allPackages).getRange(0, min(20, allPackages.length));
