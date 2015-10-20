@@ -1,7 +1,7 @@
 #!/bin/bash
 export PATH=/usr/local/bin:/usr/bin:/bin/:/usr/lib/dart/bin
 export HOME=/root
-DIRROOT=/dartdoc-generator
+DIRROOT=/dartdocorg
 
 case $1 in
    start)

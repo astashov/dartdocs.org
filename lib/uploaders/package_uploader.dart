@@ -1,12 +1,12 @@
-library dartdoc_generator.package_uploader;
+library dartdocorg.package_uploader;
 
 import 'dart:async';
 import 'dart:io';
 
-import 'package:dartdoc_generator/config.dart';
-import 'package:dartdoc_generator/package.dart';
-import 'package:dartdoc_generator/storage.dart';
-import 'package:dartdoc_generator/utils.dart';
+import 'package:dartdocorg/config.dart';
+import 'package:dartdocorg/package.dart';
+import 'package:dartdocorg/storage.dart';
+import 'package:dartdocorg/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;

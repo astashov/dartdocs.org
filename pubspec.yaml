@@ -1,4 +1,4 @@
-name: dartdoc_generator
+name: dartdocorg
 version: 0.0.1
 description: Generates the Dart documentation for all the packages in pub
 

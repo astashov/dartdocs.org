@@ -1,4 +1,4 @@
-library dartdoc_generator.config;
+library dartdocorg.config;
 
 import 'dart:convert';
 import 'dart:io';

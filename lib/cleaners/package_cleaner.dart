@@ -1,13 +1,13 @@
-library dartdoc_generator.cleaners.package_cleaner;
+library dartdocorg.cleaners.package_cleaner;
 
 import 'dart:io';
 
-import 'package:dartdoc_generator/config.dart';
-import 'package:dartdoc_generator/package.dart';
+import 'package:dartdocorg/config.dart';
+import 'package:dartdocorg/package.dart';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart' as yaml;
 import 'package:path/path.dart' as p;
-import 'package:dartdoc_generator/version.dart';
+import 'package:dartdocorg/version.dart';
 
 var _logger = new Logger("package_cleaner");
 

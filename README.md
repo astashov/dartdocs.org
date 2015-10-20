@@ -13,8 +13,8 @@ Unfortunately (or, fortunately :)) you cannot do anything with http://www.dartdo
 But once you got them, the rest is simple (if you have Dart already installed):
 
 ```
-git clone https://github.com/astashov/dartdoc-generator.git
-cd dartdoc-generator
+git clone https://github.com/astashov/dartdocorg.git
+cd dartdocorg
 pub get
 ```
 

@@ -1,4 +1,4 @@
-library dartdoc_generator.logging;
+library dartdocorg.logging;
 
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';

@@ -1,11 +1,11 @@
-library dartdoc_generator.index_uploader;
+library dartdocorg.index_uploader;
 
 import 'dart:async';
 import 'dart:io';
 
-import 'package:dartdoc_generator/config.dart';
-import 'package:dartdoc_generator/generators/index_generator.dart';
-import 'package:dartdoc_generator/storage.dart';
+import 'package:dartdocorg/config.dart';
+import 'package:dartdocorg/generators/index_generator.dart';
+import 'package:dartdocorg/storage.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 

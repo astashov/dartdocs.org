@@ -9,11 +9,11 @@ sh -c 'curl https://storage.googleapis.com/download.dartlang.org/linux/debian/da
 sh -c 'curl https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_unstable.list > /etc/apt/sources.list.d/dart_unstable.list'
 apt-get update -y
 apt-get install dart monit git -y
-git clone https://github.com/astashov/dartdoc-generator.git
+git clone https://github.com/astashov/dartdocorg.git
 usermod -m -d /root root
 export HOME=/root
 export PATH=$PATH:/usr/lib/dart/bin
-cd dartdoc-generator
+cd dartdocorg
 pub get
 
 echo 'google_cloud:
@@ -53,13 +53,13 @@ check system $HOST
     if memory usage > 95% then alert
 
 check process package_generator with pidfile /var/run/package_generator.pid
-    start = "/dartdoc-generator/package_generator_monit.sh start"
-    stop = "/dartdoc-generator/package_generator_monit.sh stop"
+    start = "/dartdocorg/package_generator_monit.sh start"
+    stop = "/dartdocorg/package_generator_monit.sh stop"
 ' > /etc/monit/conf.d/package_generator
 
 chmod 700 /etc/monit/conf.d/package_generator
 
 echo '# rotate logs
-0 * * * * root /usr/sbin/logrotate /dartdoc-generator/logrotate.conf' > /etc/cron.d/logrotate
+0 * * * * root /usr/sbin/logrotate /dartdocorg/logrotate.conf' > /etc/cron.d/logrotate
 
 monit reload

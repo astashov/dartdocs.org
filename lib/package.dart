@@ -1,10 +1,10 @@
-library dartdoc_generator.package;
+library dartdocorg.package;
 
 import 'dart:convert';
 
-import 'package:dartdoc_generator/config.dart';
-import 'package:dartdoc_generator/utils.dart';
-import 'package:dartdoc_generator/version.dart';
+import 'package:dartdocorg/config.dart';
+import 'package:dartdocorg/utils.dart';
+import 'package:dartdocorg/version.dart';
 import 'package:path/path.dart' as path;
 
 class Package implements Comparable<Package> {

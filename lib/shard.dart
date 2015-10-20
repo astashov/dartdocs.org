@@ -20,8 +20,8 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:dartdoc_generator/config.dart';
-import 'package:dartdoc_generator/utils.dart';
+import 'package:dartdocorg/config.dart';
+import 'package:dartdocorg/utils.dart';
 import 'package:googleapis/compute/v1.dart';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:logging/logging.dart';

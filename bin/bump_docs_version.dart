@@ -1,11 +1,11 @@
-library dartdoc_generator.bin.bump_docs_version;
+library dartdocorg.bin.bump_docs_version;
 
 import 'dart:io';
 
-import 'package:dartdoc_generator/config.dart';
-import 'package:dartdoc_generator/logging.dart' as logging;
+import 'package:dartdocorg/config.dart';
+import 'package:dartdocorg/logging.dart' as logging;
 import 'package:logging/logging.dart';
-import 'package:dartdoc_generator/datastore.dart';
+import 'package:dartdocorg/datastore.dart';
 import 'package:intl/intl.dart';
 import 'package:args/args.dart';
 
@@ -29,4 +29,4 @@ main(List<String> args) async {
   exit(0);
 }
 
-Logger _logger = new Logger("dartdoc_generator");
+Logger _logger = new Logger("dartdocorg");
