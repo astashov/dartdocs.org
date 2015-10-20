@@ -15,6 +15,12 @@ class PackageCleaner {
   final Config config;
   PackageCleaner(this.config);
 
+  /// Deletes whole [config.outputDir] and installed packages in .pub-cache, which are not used by this app.
+  ///
+  /// Be careful when using that on your local machine - it will wipe out all the installed packages in .pub-cache!!!
+  /// I decided to use this approach instead of deleting the packages after we generate them, because this is more
+  /// reliable - in case of crashing, and after monit runs the app again, we won't have the leftovers after the previous
+  /// run while generating the packages' docs
   void deleteSync() {
     _logger.info("Cleaning old output and pub cache");
     if (new Directory(config.outputDir).existsSync()) {

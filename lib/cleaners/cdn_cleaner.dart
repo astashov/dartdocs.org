@@ -44,7 +44,7 @@ class CdnCleaner {
 
   Future<Null> _purgeFiles(Iterable<String> relativePaths) async {
     // https://api.cloudflare.com/#zone-purge-individual-files-by-url-and-cache-tags
-    var groupedRelativePaths = inGroupsOf(relativePaths, 30); // 30 is max
+    var groupedRelativePaths = inGroupsOf(relativePaths, 30); // 30 is max, API limit
     await Future.wait(groupedRelativePaths.map((pathsAndNulls) async {
       var paths = pathsAndNulls.where((path) => path != null);
       var files = paths.map((f) => f == "" ? config.hostedUrl : "${config.hostedUrl}/$f").toList();

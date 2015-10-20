@@ -7,6 +7,10 @@ Logger _logger = new Logger("retry");
 
 const _defaultDurations = const [const Duration(seconds: 3), const Duration(seconds: 5), const Duration(seconds: 15)];
 
+/// Utility function, which will retry the given lambda [body] several times, with specified durations, and will
+/// rethrow after the retries are out.
+///
+/// Useful for wrapping any unreliable parts of code, like network access.
 Future<dynamic> retry(body(), {int number: 3, Iterable<Duration> durations: _defaultDurations, bool fromRetry: false}) async {
   try {
     if (fromRetry) {

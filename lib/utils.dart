@@ -44,8 +44,8 @@ int hash(Iterable<Object> objects) {
 /// inGroups([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 3).forEach((i) => print(i));
 ///
 /// ["1", "2", "3", "4"]
-/// ["5", "6", "7", nil]
-/// ["8", "9", "10", nil]
+/// ["5", "6", "7"]
+/// ["8", "9", "10"]
 Iterable<Iterable> inGroups(Iterable collection, int number, [fillWith = null]) {
   var coll = collection.toList();
   var division = collection.length ~/ number;
@@ -72,7 +72,7 @@ Iterable<Iterable> inGroups(Iterable collection, int number, [fillWith = null]) 
 /// ["1", "2", "3"]
 /// ["4", "5", "6"]
 /// ["7", "8", "9"]
-/// ["10", nil, nil]
+/// ["10"]
 Iterable<Iterable> inGroupsOf(Iterable collection, int number) {
   if (collection.isEmpty) {
     return [];
