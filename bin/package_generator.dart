@@ -57,11 +57,13 @@ class _PackageGenerator {
   Future<Iterable<Package>> retrieveNextPackages() async {
     List<Package> allPackages = (await pubRetriever.update());
     await datastoreRetriever.update(docsVersion);
+    var allDataStorePackages = datastoreRetriever.allPackages;
+    allPackages.removeWhere((p) => allDataStorePackages.contains(p));
+    _logger.info("The number of the new packages - ${allPackages.length}");
     var shard = await getShard(config);
     _logger.info("Shard: $shard");
-    allPackages.removeWhere((p) => datastoreRetriever.allPackages.contains(p));
-    _logger.info("The number of the new packages - ${allPackages.length}");
-    return shard.part(allPackages).getRange(0, min(20, allPackages.length));
+    var shardedPackages = shard.part(allPackages);
+    return shardedPackages.getRange(0, min(20, shardedPackages.length));
   }
 
   Future<Null> handlePackages(Iterable<Package> packages) async {
@@ -111,7 +113,7 @@ main(List<String> args) async {
           await packageGenerator.handlePackages(packages);
         } else {
           _logger.info("Sleeping for 3 minutes...");
-          sleep(new Duration(minutes: 3));
+          await new Future.delayed(new Duration(minutes: 3));
         }
       }
     }
