@@ -74,7 +74,10 @@ class PackageGenerator {
 
     if (new Directory(workingDirectory).existsSync()) {
       try {
-        await _runCommand(logs, "pub", ["get"], workingDirectory: workingDirectory);
+        var pubGetFuture = _runCommand(logs, "pub", ["get"], workingDirectory: workingDirectory);
+        await pubGetFuture.timeout(new Duration(minutes: 5), onTimeout: () {
+          throw new RunCommandError("Pub get error - timeout", "");
+        });
       } on RunCommandError catch (e, _) {
         _addLog(logs, Level.WARNING, "While doing pub get, got RunCommandError exception,\nstdout: ${e.stdout},\nstderr: ${e.stderr}");
       }
