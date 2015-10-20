@@ -20,7 +20,7 @@ pub get
 
 Now, copy your credentials to credentials.yaml, and you are good to go.
 
-## Scripts
+## Dart Scripts
 
 It has several scripts, which you can use to control the generation of docs. All scripts support `--help` arg, which
 will tell you more about the supported arguments.
@@ -60,6 +60,29 @@ to the global docsVersion value, we consider it generated (with success or error
 docs will be regenerated again. So, `bin/bump_docs_version.dart` just bumps global docsVersion to the current timestamp.
 Which means all the packages will be stale, and will be regenerated again. That's useful when you need to regenerate
 all the packages with the new version of dartdocs, for example.
+
+## Shell scripts
+
+There are also some shell scripts, which we use to run the app
+
+* create_google_cloud_project.sh
+
+It configures Google Cloud project to run dartdocorg. It adds indexes to Datastore, creates the bucket, creates instance
+templates and run instances in instance groups.
+
+* {index,package}_generator_boot.sh
+
+This is a startup script for the index and package instances, it provisions the instances:
+
+- Installs latest Dart SDK
+- Clones and configures the app
+- Creates credentials.yaml
+- Configures monit to restart the script if it crashes
+- Configures log rotation
+
+* {index,package}_generator_monit.sh
+
+This is the script, which is used by monit to start, stop and restart the Dart scripts.
 
 ## Cloud architecture
 
@@ -101,3 +124,40 @@ $ gcloud preview datastore cleanup-indexes index.yaml
 
 * CloudFront CDN - to add SSL support and the redirect from http://dartdocs.org to http://www.dartdocs.org
 
+## Common tasks
+
+* Regenerate the docs with the new version of dartdoc
+
+The instances install the latest dev SDK on boot, (check out the `{index,package}_generator_boot.sh` script).
+So, to upgrade to the new version of dartdoc, we need to restart the instances and scale them up.
+We also need to run `bin/bump_docs_version.dart` to update `docsVersion` and purge the CDN cache for the package docs.
+
+So, you have to do:
+
+```bash
+$ gcloud compute instance-groups managed resize dartdocs-package-generators --size 0 --zone us-central1-f
+$ dart bin/bump_docs_version.dart
+$ gcloud compute instance-groups managed resize dartdocs-package-generators --size 11 --zone us-central1-f
+... after its done ...
+$ dart bin/purge_cdn_cache.dart
+```
+
+So, the command `gcloud compute instance-groups managed resize dartdocs-package-generators --size 11 --zone us-central1-f`
+sets the number of instances in dartdocs-package-generators group according to the `--size` argument.
+By default, you only can launch 24 CPU units per google cloud project, so, by default we are limited with 11 instances.
+
+It takes ~20-24 hours to regenerate the whole pub with 11 instances.
+
+It doesn't scale down automatically, you have to use the command
+`gcloud compute instance-groups managed resize dartdocs-package-generators --size 1 --zone us-central1-f`
+to scale it back to one instance once they are done with regenerating everything.
+
+* Regenerate just one specific package
+
+Just simply run:
+
+```bash
+$ dart bin/package_generator.dart --name blah --version 1.2.3
+```
+
+And it will regenerate the package and override it on the https://www.dartdocs.org.
