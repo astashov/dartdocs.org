@@ -53,8 +53,8 @@ check system $HOST
     if memory usage > 95% then alert
 
 check process index_generator with pidfile /var/run/index_generator.pid
-    start = "/dartdocorg/generator/index_generator_monit.sh start"
-    stop = "/dartdocorg/generator/index_generator_monit.sh stop"
+    start = "/dartdocorg/index_generator_monit.sh start"
+    stop = "/dartdocorg/index_generator_monit.sh stop"
 ' > /etc/monit/conf.d/index_generator
 
 chmod 700 /etc/monit/conf.d/index_generator
