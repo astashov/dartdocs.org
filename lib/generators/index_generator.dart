@@ -23,11 +23,10 @@ class IndexGenerator {
     html.writeln("<dl>");
     groupedPackages.forEach((name, packageVersions) {
       List<Package> sortedPackageVersions = new List.from(packageVersions)..sort((a, b) => b.compareTo(a));
-      html.writeln("<dt>${sortedPackageVersions.first.name}</dt><dd>");
-      for (var package in sortedPackageVersions) {
-        html.writeln(
-            "<a href='/${config.gcsPrefix}/${package.name}/${package.version}/log.txt'>${package.version}</a> ");
-      }
+      html.writeln('<dt>${sortedPackageVersions.first.name}</dt><dd class="text-muted">');
+      html.write(sortedPackageVersions.map((package) {
+        return "<a href='/${config.gcsPrefix}/${package.name}/${package.version}/log.txt'>${package.version}</a>";
+      }).join(' &bull;\n'));
       html.writeln("</dd>");
     });
     html.writeln("</dl>");
@@ -50,7 +49,7 @@ class IndexGenerator {
         html.writeln("<td>${package.fullName}</td>");
       }
       html.writeln("<td>${package.updatedAt}</td>");
-      html.writeln("<td>${isSuccessful ? 'Success' : '<strong>FAILURE</strong>'}</td>");
+      html.writeln("<td>${isSuccessful ? 'Success' : '<em>Failure</em>'}</td>");
       html.writeln("<td><a href='/${package.logUrl(config)}'>build log</a></td>");
       html.writeln("</tr>");
     });
@@ -66,11 +65,10 @@ class IndexGenerator {
     html.writeln("<dl>");
     groupedPackages.forEach((name, packageVersions) {
       List<Package> sortedPackageVersions = new List.from(packageVersions)..sort((a, b) => b.compareTo(a));
-      html.writeln("<dt>${sortedPackageVersions.first.name}</dt><dd>");
-      for (var package in sortedPackageVersions) {
-        html.writeln(
-            "<a href='/${config.gcsPrefix}/${package.name}/${package.version}/index.html'>${package.version}</a> ");
-      }
+      html.writeln('<dt>${sortedPackageVersions.first.name}</dt><dd class="text-muted">');
+      html.write(sortedPackageVersions.map((package) {
+        return "<a href='/${config.gcsPrefix}/${package.name}/${package.version}/index.html'>${package.version}</a>";
+      }).join(' &bull;\n'));
       html.writeln("</dd>");
     });
     html.writeln("</dl>");
