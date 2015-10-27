@@ -24,6 +24,10 @@ class Package implements Comparable<Package> {
     return new Package(name, new Version.parse(version), updatedAt);
   }
 
+  String canonicalUrl(Config config) {
+    return path.join(config.hostedUrl, config.gcsPrefix, name, "latest");
+  }
+
   String get fullName => "$name-$version";
 
   int get hashCode => hash([name, version]);

@@ -18,6 +18,8 @@ import 'package:logging/logging.dart';
 import 'package:dartdocorg/cleaners/package_cleaner.dart';
 import 'package:dartdocorg/datastore.dart';
 import 'package:dartdocorg/cleaners/cdn_cleaner.dart';
+import 'package:dartdocorg/generators/latest_generator.dart';
+import 'package:dartdocorg/uploaders/latest_uploader.dart';
 
 class _PackageGenerator {
   final Config config;
@@ -79,6 +81,21 @@ class _PackageGenerator {
     await Future.wait(erroredPackages.map((package) async {
       return datastore.upsert(package, docsVersion, status: "error");
     }));
+    var latestPackages = _findLatestPackages(successfulPackages);
+    var latestHtmlByPackages = new LatestGenerator(config).generate(latestPackages);
+    await new LatestUploader(config, storage).uploadLatestFiles(latestHtmlByPackages);
+  }
+
+  Iterable<Package> _findLatestPackages(Iterable<Package> packages) {
+    return packages.where((p) {
+      List<Package> samePackages = pubRetriever.packagesByName[p.name].toList();
+      if (samePackages != null && samePackages.isNotEmpty) {
+        samePackages.sort();
+        return p == samePackages.last;
+      } else {
+        return false;
+      }
+    });
   }
 }
 

@@ -1,4 +1,4 @@
-library dartdocorg.package_uploader;
+library dartdocorg.uploaders.package_uploader;
 
 import 'dart:async';
 import 'dart:io';

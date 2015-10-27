@@ -14,6 +14,10 @@ String _getUrl(int page) => "https://pub.dartlang.org/packages.json?page=$page";
 
 class PubRetriever {
   List<Package> _currentList = [];
+  Iterable<Package> get currentList => _currentList;
+
+  Map<String, List<Package>> _packagesByName = {};
+  Map<String, Iterable<Package>> get packagesByName => _packagesByName;
 
   PubRetriever();
 
@@ -40,6 +44,10 @@ class PubRetriever {
         packages.forEach((package) {
           if (!_currentList.contains(package)) {
             _currentList.add(package);
+            if (_packagesByName[package.name] == null) {
+              _packagesByName[package.name] = [];
+            }
+            _packagesByName[package.name].add(package);
           }
         });
       }

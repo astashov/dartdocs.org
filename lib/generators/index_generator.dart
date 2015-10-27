@@ -1,4 +1,4 @@
-library dartdocorg.index_generator;
+library dartdocorg.generators.index_generator;
 
 import 'dart:async';
 import 'dart:io';

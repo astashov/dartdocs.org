@@ -161,3 +161,17 @@ $ dart bin/package_generator.dart --name blah --version 1.2.3
 ```
 
 And it will regenerate the package and override it on the https://www.dartdocs.org.
+
+## Canonical urls
+
+We have lots of versions of docs for a package, and we want search engines to
+give users the latest copy of the docs. We don't want an old version to appear at the top
+of the search results.
+
+We achieve that by setting a `rel="canonical"` in the HTML pages of the docs, this way we tell search engines
+what the canonical doc is for a package. The canonical url looks like `/documentation/package-name/latest/index.html`
+(note the use of `latest` here)
+
+When we generate docs for a package, we set `rel="canonical"` meta tag, and also we generate the HTML
+for the `latest/index.html`, which contains meta refresh tag. So, when user opens `latest/index.html`, she'll
+be redirected to the latest version of the package, like `/documentation/package-name/1.2.3/index.html`.

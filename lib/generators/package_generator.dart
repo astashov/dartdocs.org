@@ -1,4 +1,4 @@
-library dartdocorg.package_generator;
+library dartdocorg.generators.package_generator;
 
 import 'dart:async';
 import 'dart:io';
@@ -20,7 +20,7 @@ class PackageGenerator {
     await _runCommand([], "pub", ["global", "activate", "dartdoc"]);
   }
 
-  Future<Set<Package>> generate(Iterable allPackages) async {
+  Future<Set<Package>> generate(Iterable<Package> allPackages) async {
     var groupedPackages = inGroupsOf(allPackages, 4);
     var erroredPackages = new Set();
     for (var packages in groupedPackages) {
@@ -29,10 +29,12 @@ class PackageGenerator {
         try {
           await _runCommand(logs, "pub", ["--version"]);
           await _install(logs, package);
+          //await _runCommand(logs, "pub", ["global", "run", "dartdoc",
           await _runCommand(logs, "dartdoc", [
             "--input=${package.pubCacheDir(config)}",
             "--output=${package.outputDir(config)}",
             "--hosted-url=${config.hostedUrl}",
+            "--rel-canonical-prefix=${package.canonicalUrl(config)}",
             "--header=${path.join(config.dirroot, "resources", "redirector.html")}",
             "--footer=${path.join(config.dirroot, "resources", "google_analytics.html")}",
             "--dart-sdk=${config.dartSdkPath}"
