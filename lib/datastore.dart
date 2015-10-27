@@ -6,7 +6,6 @@ import 'package:dartdocorg/config.dart';
 import 'package:googleapis_beta/datastore/v1beta2.dart';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:dartdocorg/package.dart';
-import 'package:dartdocorg/version.dart';
 import 'package:dartdocorg/utils/retry.dart';
 import 'package:logging/logging.dart';
 
@@ -147,8 +146,10 @@ class Datastore {
     });
     return result.batch.entityResults.map((er) {
       var entity = er.entity;
-      return new Package(entity.properties["packageName"].stringValue,
-          new Version(entity.properties["packageVersion"].stringValue), entity.properties["updatedAt"].dateTimeValue);
+      return new Package.build(
+          entity.properties["packageName"].stringValue,
+          entity.properties["packageVersion"].stringValue,
+          entity.properties["updatedAt"].dateTimeValue);
     });
   }
 }

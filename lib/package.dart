@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:dartdocorg/config.dart';
 import 'package:dartdocorg/utils.dart';
-import 'package:dartdocorg/version.dart';
+import 'package:pub_semver/pub_semver.dart';
 import 'package:path/path.dart' as path;
 
 class Package implements Comparable<Package> {
@@ -17,7 +17,11 @@ class Package implements Comparable<Package> {
 
   factory Package.fromJson(String json) {
     final map = JSON.decode(json);
-    return new Package(map["name"], new Version(map["version"]));
+    return new Package.build(map["name"], map["version"]);
+  }
+
+  factory Package.build(String name, String version, [DateTime updatedAt]) {
+    return new Package(name, new Version.parse(version), updatedAt);
   }
 
   String get fullName => "$name-$version";
@@ -27,7 +31,11 @@ class Package implements Comparable<Package> {
   bool operator ==(other) => other is Package && name == other.name && version == other.version;
 
   int compareTo(Package other) {
-    return fullName.compareTo(other.fullName);
+    if (name == other.name) {
+      return version.compareTo(other.version);
+    } else {
+      return name.compareTo(other.name);
+    }
   }
 
   String logFile(Config config) {

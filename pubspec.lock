@@ -101,6 +101,10 @@ packages:
     description: plugin
     source: hosted
     version: "0.1.0"
+  pub_semver:
+    description: pub_semver
+    source: hosted
+    version: "1.2.2"
   source_span:
     description: source_span
     source: hosted

@@ -1,6 +1,8 @@
 library dartdocorg.bin.package_generator;
 
 import 'dart:io';
+import 'dart:async';
+import 'dart:math';
 
 import 'package:args/args.dart';
 import 'package:dartdocorg/config.dart';
@@ -15,9 +17,6 @@ import 'package:dartdocorg/uploaders/package_uploader.dart';
 import 'package:logging/logging.dart';
 import 'package:dartdocorg/cleaners/package_cleaner.dart';
 import 'package:dartdocorg/datastore.dart';
-import 'dart:async';
-import 'dart:math';
-import 'package:dartdocorg/version.dart';
 import 'package:dartdocorg/cleaners/cdn_cleaner.dart';
 
 class _PackageGenerator {
@@ -102,7 +101,7 @@ main(List<String> args) async {
 
     if (argsResults["name"] != null && argsResults["version"] != null) {
       await packageGenerator.initialize();
-      var package = new Package(argsResults["name"], new Version(argsResults["version"]));
+      var package = new Package.build(argsResults["name"], argsResults["version"]);
       await packageGenerator.handlePackages([package]);
       exit(0);
     } else {

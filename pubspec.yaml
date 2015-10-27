@@ -13,6 +13,7 @@ dependencies:
   yaml: any
   path: any
   googleapis_auth: any
+  pub_semver: any
 
 dev_dependencies:
   grinder: any

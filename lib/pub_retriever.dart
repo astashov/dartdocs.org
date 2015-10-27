@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dartdocorg/package.dart';
-import 'package:dartdocorg/version.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:dartdocorg/utils/retry.dart';
@@ -32,7 +31,7 @@ class PubRetriever {
       }));
       var packages = pageOfPackages.map((packageMap) {
         return packageMap["versions"].map((version) {
-          return new Package(packageMap["name"], new Version(version));
+          return new Package.build(packageMap["name"], version);
         });
       }).expand((i) => i);
       if (packages.every((p) => _currentList.contains(p))) {
