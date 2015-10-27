@@ -33,7 +33,6 @@ class PackageGenerator {
           await _runCommand(logs, "dartdoc", [
             "--input=${package.pubCacheDir(config)}",
             "--output=${package.outputDir(config)}",
-            "--add-crossdart",
             "--hosted-url=${config.hostedUrl}",
             "--rel-canonical-prefix=${package.canonicalUrl(config)}",
             "--header=${path.join(config.dirroot, "resources", "redirector.html")}",
