@@ -32,13 +32,13 @@ cloudflare:
 echo 'dart_sdk: /usr/lib/dart
 pub_cache_dir: /root/.pub-cache
 output_dir: /root/dartdocs.org
-hosted_url: https://www.dartdocs2.com
+hosted_url: https://www.dartdocs.org
 gcs_prefix: documentation
 gcs_meta: meta
 gc_project_name: dartdocs
 gc_zone: us-central1-f
 gc_group_name: dartdocs-package-generators
-bucket: www.dartdocs2.com
+bucket: www.dartdocs.org
 install_timeout: 120' > config.yaml
 
 echo 'set daemon 60
