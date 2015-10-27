@@ -45,7 +45,7 @@ class PackageUploader {
     for (var package in packages) {
       _logger.info("Uploading package files $package to GCS");
       var entities = await new Directory(package.outputDir(config)).list(recursive: true).toList();
-      var groups = inGroupsOf(entities.where((e) => e is File), 20);
+      var groups = inGroupsOf(entities.where((e) => e is File), 10);
       for (Iterable group in groups) {
         await Future.wait(group.map((entity) {
           var relative = entity.path.replaceFirst("${package.outputDir(config)}/", "");

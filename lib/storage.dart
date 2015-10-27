@@ -49,7 +49,7 @@ class Storage {
           name: path,
           uploadMedia: media,
           predefinedAcl: "publicRead");
-      var microseconds = length * 200 + 5000000; // give 5 seconds minimum
+      var microseconds = length * 200 + 30000000; // give 30 seconds minimum
       return future.timeout(new Duration(microseconds: microseconds), onTimeout: () {
         throw 'Timed out ${microseconds}mks - $path';
       });
