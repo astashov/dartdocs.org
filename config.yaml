@@ -4,8 +4,8 @@ output_dir: /Users/anton/dartdocs.org
 hosted_url: http://www.dartdocs.org
 gcs_prefix: documentation
 gcs_meta: meta
-gc_project_name: dartdocs
+gc_project_name: dart-carte-du-jour
 gc_zone: us-central1-f
 gc_group_name: dartdocs-package-generators
 bucket: www.dartdocs.org
-install_timeout: 30
+install_timeout: 120

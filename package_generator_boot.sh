@@ -35,7 +35,7 @@ output_dir: /root/dartdocs.org
 hosted_url: https://www.dartdocs.org
 gcs_prefix: documentation
 gcs_meta: meta
-gc_project_name: dartdocs
+gc_project_name: dart-carte-du-jour
 gc_zone: us-central1-f
 gc_group_name: dartdocs-package-generators
 bucket: www.dartdocs.org
@@ -43,7 +43,7 @@ install_timeout: 120' > config.yaml
 
 echo 'set daemon 60
 set logfile syslog facility log_daemon
-set alert anton.astashov@gmail.com
+set alert dartdocsorg@gmail.com
 
 set mailserver smtp.gmail.com port 587
     username "dartdocsorg@gmail.com" password "blablahblah" using tlsv1
