@@ -71,7 +71,7 @@
                 newPath = "/" + library + "/" + library + "-library.html";
             }
 
-            var newLocation = location.href.replace(/\/index.html.*/, newPath);
+            var newLocation = location.href.replace(/\/[^\/]*#.*$/, newPath);
 
             var http = new XMLHttpRequest();
             http.open('HEAD', newLocation);
