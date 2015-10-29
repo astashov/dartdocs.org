@@ -67,8 +67,10 @@ class _PackageGenerator {
     return shardedPackages.getRange(0, min(20, shardedPackages.length));
   }
 
-  Future<Null> handlePackages(Iterable<Package> packages) async {
-    packageCleaner.deleteSync();
+  Future<Null> handlePackages(Iterable<Package> packages, {bool shouldDeleteOldPackages: false}) async {
+    if (shouldDeleteOldPackages) {
+      packageCleaner.deleteSync();
+    }
     var erroredPackages = await generator.generate(packages);
     var successfulPackages = packages.toSet()..removeAll(erroredPackages);
     await uploader.uploadSuccessfulPackages(successfulPackages);
@@ -126,7 +128,7 @@ main(List<String> args) async {
         await packageGenerator.initialize();
         var packages = await packageGenerator.retrieveNextPackages();
         if (packages.isNotEmpty) {
-          await packageGenerator.handlePackages(packages);
+          await packageGenerator.handlePackages(packages, shouldDeleteOldPackages: true);
         } else {
           _logger.info("Sleeping for 3 minutes...");
           await new Future.delayed(new Duration(minutes: 3));
