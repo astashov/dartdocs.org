@@ -4,18 +4,16 @@ description: Generates the Dart documentation for all the packages in pub
 
 dependencies:
   args: any
-  logging: any
-  http: any
-  yaml: any
-  intl: any
-  googleapis: any
-  googleapis_beta: any
-  yaml: any
-  path: any
   googleapis_auth: any
+  googleapis_beta: any
+  googleapis: any
+  http: any
+  intl: any
+  logging: any
+  path: any
   pub_semver: any
-
+  yaml: any
 dev_dependencies:
   grinder: any
-  tuneup: any
   linter: any
+  tuneup: any
