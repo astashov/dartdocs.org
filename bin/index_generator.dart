@@ -14,6 +14,8 @@ import 'package:dartdocorg/datastore.dart';
 import 'package:args/args.dart';
 import 'dart:async';
 
+final Logger _logger = new Logger("dartdocorg");
+
 main(List<String> args) async {
   try {
     var parser = new ArgParser();
@@ -82,5 +84,3 @@ main(List<String> args) async {
     exitCode = 1;
   }
 }
-
-Logger _logger = new Logger("dartdocorg");

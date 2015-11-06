@@ -6,6 +6,8 @@ import 'package:logging/logging.dart';
 import 'package:dartdocorg/cleaners/cdn_cleaner.dart';
 import 'package:args/args.dart';
 
+final Logger _logger = new Logger("purge_cdn_cache");
+
 main(List<String> args) async {
   logging.initialize();
   var parser = new ArgParser();
@@ -24,5 +26,3 @@ main(List<String> args) async {
   await cdnCleaner.purgeAll();
   _logger.info("Done");
 }
-
-Logger _logger = new Logger("purge_cdn_cache");

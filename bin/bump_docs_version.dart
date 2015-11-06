@@ -7,6 +7,8 @@ import 'package:dartdocorg/datastore.dart';
 import 'package:intl/intl.dart';
 import 'package:args/args.dart';
 
+final Logger _logger = new Logger("dartdocorg");
+
 main(List<String> args) async {
   logging.initialize();
   var parser = new ArgParser();
@@ -25,5 +27,3 @@ main(List<String> args) async {
   await datastore.bumpDocsVersion(docsVersion);
   _logger.info("Done");
 }
-
-Logger _logger = new Logger("dartdocorg");

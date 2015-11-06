@@ -21,6 +21,8 @@ import 'package:dartdocorg/cleaners/cdn_cleaner.dart';
 import 'package:dartdocorg/generators/latest_generator.dart';
 import 'package:dartdocorg/uploaders/latest_uploader.dart';
 
+final Logger _logger = new Logger("dartdocorg");
+
 class _PackageGenerator {
   final Config config;
   final PubRetriever pubRetriever;
@@ -141,5 +143,3 @@ main(List<String> args) async {
     exitCode = 1;
   }
 }
-
-Logger _logger = new Logger("dartdocorg");
