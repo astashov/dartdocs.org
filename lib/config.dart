@@ -25,12 +25,16 @@ class Config {
   final int installTimeout;
   final ServiceAccountCredentials credentials;
 
-  factory Config.buildFromFiles(String dirroot, String configFile, String credentialsFile) {
+  factory Config.buildFromFiles(
+      String dirroot, String configFile, String credentialsFile) {
     dirroot ??= Directory.current.path;
-    var configValues = yaml.loadYaml(new File(p.join(dirroot, configFile)).readAsStringSync());
-    var credentialsValues = yaml.loadYaml(new File(p.join(dirroot, credentialsFile)).readAsStringSync());
+    var configValues =
+        yaml.loadYaml(new File(p.join(dirroot, configFile)).readAsStringSync());
+    var credentialsValues = yaml.loadYaml(
+        new File(p.join(dirroot, credentialsFile)).readAsStringSync());
     var cloudflareValues = credentialsValues["cloudflare"];
-    var serviceAccountCredentials = new ServiceAccountCredentials.fromJson(JSON.encode(credentialsValues["google_cloud"]));
+    var serviceAccountCredentials = new ServiceAccountCredentials.fromJson(
+        JSON.encode(credentialsValues["google_cloud"]));
     return new Config._(
         dirroot,
         configValues["dart_sdk"],

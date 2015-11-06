@@ -45,9 +45,13 @@ Future<Shard> getShard(Config config) async {
 Future<Set<String>> _retrieveInstanceGroupInstances(Config config) async {
   var httpClient = await clientViaServiceAccount(config.credentials, _scopes);
   var compute = new ComputeApi(httpClient);
-  var instanceGroupsListInstances = await compute.instanceGroups
-      .listInstances(new InstanceGroupsListInstancesRequest(), config.gcProjectName, config.gcZone, config.gcGroupName);
-  if (instanceGroupsListInstances?.items != null && instanceGroupsListInstances.items.isNotEmpty) {
+  var instanceGroupsListInstances = await compute.instanceGroups.listInstances(
+      new InstanceGroupsListInstancesRequest(),
+      config.gcProjectName,
+      config.gcZone,
+      config.gcGroupName);
+  if (instanceGroupsListInstances?.items != null &&
+      instanceGroupsListInstances.items.isNotEmpty) {
     var regexp = new RegExp(r"\/([^\/]+)$");
     return instanceGroupsListInstances.items.map((item) {
       var name = regexp.firstMatch(item.instance)[1];

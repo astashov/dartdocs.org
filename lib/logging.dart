@@ -13,7 +13,8 @@ void initialize([int index]) {
   Logger.root.level = Level.FINE;
 }
 
-String logFormatter(LogRecord record, {int index, bool shouldConvertToPTZ: false}) {
+String logFormatter(LogRecord record,
+    {int index, bool shouldConvertToPTZ: false}) {
   var timeString = new DateFormat("H:m:s.S").format(record.time);
   String message = "";
   var name = record.loggerName.replaceAll(new RegExp(r"^crossdart\."), "");

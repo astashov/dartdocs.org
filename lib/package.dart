@@ -32,7 +32,8 @@ class Package implements Comparable<Package> {
 
   int get hashCode => hash([name, version]);
 
-  bool operator ==(other) => other is Package && name == other.name && version == other.version;
+  bool operator ==(other) =>
+      other is Package && name == other.name && version == other.version;
 
   int compareTo(Package other) {
     if (name == other.name) {
@@ -55,7 +56,8 @@ class Package implements Comparable<Package> {
   }
 
   String pubCacheDir(Config config) {
-    return path.join(config.pubCacheDir, "hosted", "pub.dartlang.org", "$name-$version");
+    return path.join(
+        config.pubCacheDir, "hosted", "pub.dartlang.org", "$name-$version");
   }
 
   String toJson() {
@@ -75,7 +77,8 @@ class Package implements Comparable<Package> {
   }
 
   Package update({String name, Version version, DateTime updatedAt}) {
-    return new Package(name ?? this.name, version ?? this.version, updatedAt ?? this.updatedAt);
+    return new Package(name ?? this.name, version ?? this.version,
+        updatedAt ?? this.updatedAt);
   }
 
   String url(Config config) {

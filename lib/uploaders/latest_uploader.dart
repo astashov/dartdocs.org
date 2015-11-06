@@ -16,7 +16,8 @@ class LatestUploader {
   final Storage storage;
   LatestUploader(this.config, this.storage);
 
-  Future<Null> uploadLatestFiles(Map<Package, Map<String, String>> latestHtmlByPackages) async {
+  Future<Null> uploadLatestFiles(
+      Map<Package, Map<String, String>> latestHtmlByPackages) async {
     for (var package in latestHtmlByPackages.keys) {
       _logger.info("Pointing latest to the package $package");
       var htmlsByRelativePaths = latestHtmlByPackages[package];

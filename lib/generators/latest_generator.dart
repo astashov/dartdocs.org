@@ -15,10 +15,14 @@ class LatestGenerator {
 
   Map<Package, Map<String, String>> generate(Iterable<Package> packages) {
     return packages.fold({}, (Map<Package, String> pkgs, Package package) {
-      var files = new Directory(package.outputDir(config)).listSync(recursive: true).where((f) => f is File && f.path.endsWith(".html"));
+      var files = new Directory(package.outputDir(config))
+          .listSync(recursive: true)
+          .where((f) => f is File && f.path.endsWith(".html"));
       pkgs[package] = files.fold({}, (fls, file) {
-        var relativePath = file.path.replaceAll(package.outputDir(config) + "/", "");
-        var url = path.join(config.hostedUrl, config.gcsPrefix, package.name, package.version.toString(), relativePath);
+        var relativePath =
+            file.path.replaceAll(package.outputDir(config) + "/", "");
+        var url = path.join(config.hostedUrl, config.gcsPrefix, package.name,
+            package.version.toString(), relativePath);
         fls[relativePath] = """<html>
           <head>
             <title>www.dartdocs.org</title>

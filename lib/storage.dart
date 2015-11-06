@@ -22,35 +22,49 @@ class Storage {
   Storage(this.config);
   Future<s.StorageApi> get _storageApi async {
     if (_storageApiInst == null) {
-      _storageApiInst = clientViaServiceAccount(config.credentials, _scopes).then((httpClient) {
+      _storageApiInst = clientViaServiceAccount(config.credentials, _scopes)
+          .then((httpClient) {
         return new s.StorageApi(httpClient);
       });
     }
     return _storageApiInst;
   }
 
-  Future<Null> insertFile(String path, File file, {String contentType, int maxAge: 3600}) async {
+  Future<Null> insertFile(String path, File file,
+      {String contentType, int maxAge: 3600}) async {
     contentType = contentType ?? _getContentType(path);
-    var length = await file.openRead().transform(GZIP.encoder).fold(0, (memo, b) => memo + b.length);
+    var length = await file
+        .openRead()
+        .transform(GZIP.encoder)
+        .fold(0, (memo, b) => memo + b.length);
     return _insert(path, () => file.openRead(), length, contentType, maxAge);
   }
 
-  Future<Null> insertContent(String path, String content, String contentType, {int maxAge: 3600}) async {
-    var length = await new Stream.fromIterable([content.codeUnits]).transform(GZIP.encoder).fold(0, (memo, b) => memo + b.length);
-    return _insert(path, () => new Stream.fromIterable([content.codeUnits]), length, contentType, maxAge);
+  Future<Null> insertContent(String path, String content, String contentType,
+      {int maxAge: 3600}) async {
+    var length = await new Stream.fromIterable([content.codeUnits])
+        .transform(GZIP.encoder)
+        .fold(0, (memo, b) => memo + b.length);
+    return _insert(path, () => new Stream.fromIterable([content.codeUnits]),
+        length, contentType, maxAge);
   }
 
-  Future<Null> _insert(String path, Stream streamFactory(), int length, String contentType, int maxAge) async {
+  Future<Null> _insert(String path, Stream streamFactory(), int length,
+      String contentType, int maxAge) async {
     await retry(() async {
-      var media = new s.Media(streamFactory().transform(GZIP.encoder), length, contentType: contentType);
+      var media = new s.Media(streamFactory().transform(GZIP.encoder), length,
+          contentType: contentType);
       _logger.fine("Uploading to $path");
-      var future = (await _storageApi).objects.insert(new s.Object.fromJson({"cacheControl": "public, max-age=$maxAge"}), config.bucket,
+      var future = (await _storageApi).objects.insert(
+          new s.Object.fromJson({"cacheControl": "public, max-age=$maxAge"}),
+          config.bucket,
           contentEncoding: "gzip",
           name: path,
           uploadMedia: media,
           predefinedAcl: "publicRead");
       var microseconds = length * 200 + 30000000; // give 30 seconds minimum
-      return future.timeout(new Duration(microseconds: microseconds), onTimeout: () {
+      return future.timeout(new Duration(microseconds: microseconds),
+          onTimeout: () {
         throw 'Timed out ${microseconds}mks - $path';
       });
     });
@@ -59,9 +73,8 @@ class Storage {
   Future<Null> insertKey(String path) async {
     var media = new s.Media(new Stream.empty(), 0, contentType: "text/plain");
     await retry(() async {
-      return (await _storageApi)
-          .objects
-          .insert(null, config.bucket, name: path, uploadMedia: media, predefinedAcl: "publicRead");
+      return (await _storageApi).objects.insert(null, config.bucket,
+          name: path, uploadMedia: media, predefinedAcl: "publicRead");
     });
   }
 
@@ -70,9 +83,8 @@ class Storage {
     String pageToken;
     do {
       var objects = await retry(() async {
-        return (await _storageApi)
-            .objects
-            .list(config.bucket, prefix: prefix, delimiter: delimiter, pageToken: pageToken);
+        return (await _storageApi).objects.list(config.bucket,
+            prefix: prefix, delimiter: delimiter, pageToken: pageToken);
       });
       pageToken = objects.nextPageToken;
       if (objects.items != null && objects.items.isNotEmpty) {

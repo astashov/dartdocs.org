@@ -12,7 +12,10 @@ import 'package:logging/logging.dart';
 Logger _logger = new Logger("datastore");
 
 class Datastore {
-  static const _scopes = const [DatastoreApi.DatastoreScope, DatastoreApi.UserinfoEmailScope];
+  static const _scopes = const [
+    DatastoreApi.DatastoreScope,
+    DatastoreApi.UserinfoEmailScope
+  ];
 
   final Config config;
 
@@ -22,7 +25,8 @@ class Datastore {
 
   Future<DatastoreApi> get _datastoreApi async {
     if (_datastoreApiInst == null) {
-      _datastoreApiInst = clientViaServiceAccount(config.credentials, _scopes).then((httpClient) {
+      _datastoreApiInst = clientViaServiceAccount(config.credentials, _scopes)
+          .then((httpClient) {
         return new DatastoreApi(httpClient);
       });
     }
@@ -45,7 +49,8 @@ class Datastore {
           config.gcProjectName);
     });
     if (result.found.isNotEmpty) {
-      return int.parse(result.found.first.entity.properties["value"].integerValue);
+      return int
+          .parse(result.found.first.entity.properties["value"].integerValue);
     } else {
       return null;
     }
@@ -66,7 +71,8 @@ class Datastore {
     ]);
   }
 
-  Future<Null> upsert(Package package, int docsVersion, {String status: "success"}) async {
+  Future<Null> upsert(Package package, int docsVersion,
+      {String status: "success"}) async {
     var updatedAt = new DateTime.now().toUtc().toIso8601String();
     await _upsert([
       {
@@ -89,7 +95,8 @@ class Datastore {
   Future<CommitResponse> _upsert(List<Map> maps) async {
     DatastoreApi api = (await _datastoreApi);
     return retry(() async {
-      var transaction = (await (api.datasets.beginTransaction(new BeginTransactionRequest(), config.gcProjectName))).transaction;
+      var transaction = (await (api.datasets.beginTransaction(
+          new BeginTransactionRequest(), config.gcProjectName))).transaction;
       return api.datasets.commit(
           new CommitRequest.fromJson({
             "transaction": transaction,
@@ -99,7 +106,8 @@ class Datastore {
     });
   }
 
-  Future<Iterable<Package>> getPackages({int docsVersion, String status, DateTime updatedAt}) async {
+  Future<Iterable<Package>> getPackages(
+      {int docsVersion, String status, DateTime updatedAt}) async {
     DatastoreApi api = (await _datastoreApi);
     var filters = [];
     if (docsVersion != null) {

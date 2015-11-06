@@ -12,17 +12,21 @@ final Logger _logger = new Logger("dartdocorg");
 main(List<String> args) async {
   logging.initialize();
   var parser = new ArgParser();
-  parser.addOption('dirroot', help: "Specify the application directory, if not current");
+  parser.addOption('dirroot',
+      help: "Specify the application directory, if not current");
   parser.addFlag('help', negatable: false, help: "Show help");
   var argsResults = parser.parse(args);
   if (argsResults["help"]) {
-    print("Bumps the docsVersion global variable, which will cause regenerating all the packages from pub.\n");
+    print(
+        "Bumps the docsVersion global variable, which will cause regenerating all the packages from pub.\n");
     print(parser.usage);
     return;
   }
-  var config = new Config.buildFromFiles(argsResults["dirroot"], "config.yaml", "credentials.yaml");
+  var config = new Config.buildFromFiles(
+      argsResults["dirroot"], "config.yaml", "credentials.yaml");
   var datastore = new Datastore(config);
-  var docsVersion = int.parse(new DateFormat("yyyyMMddHHmmss").format(new DateTime.now().toUtc()));
+  var docsVersion = int.parse(
+      new DateFormat("yyyyMMddHHmmss").format(new DateTime.now().toUtc()));
   _logger.info("Setting new docsVersion: $docsVersion");
   await datastore.bumpDocsVersion(docsVersion);
   _logger.info("Done");

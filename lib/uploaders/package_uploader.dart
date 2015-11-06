@@ -36,7 +36,8 @@ class PackageUploader {
     await Future.wait(packages.map((package) async {
       _logger.info("Uploading error log file for $package to GCS");
       var logFile = new File(p.join(package.logFile(config)));
-      var path = p.join(config.gcsPrefix, package.name, package.version.toString(), "log.txt");
+      var path = p.join(config.gcsPrefix, package.name,
+          package.version.toString(), "log.txt");
       return storage.insertFile(path, logFile);
     }));
   }
@@ -44,12 +45,16 @@ class PackageUploader {
   Future<Null> uploadSuccessfulPackages(Iterable<Package> packages) async {
     for (var package in packages) {
       _logger.info("Uploading package files $package to GCS");
-      var entities = await new Directory(package.outputDir(config)).list(recursive: true).toList();
+      var entities = await new Directory(package.outputDir(config))
+          .list(recursive: true)
+          .toList();
       var groups = inGroupsOf(entities.where((e) => e is File), 20);
       for (Iterable group in groups) {
         await Future.wait(group.map((entity) {
-          var relative = entity.path.replaceFirst("${package.outputDir(config)}/", "");
-          var path = p.join(config.gcsPrefix, package.name, package.version.toString(), relative);
+          var relative =
+              entity.path.replaceFirst("${package.outputDir(config)}/", "");
+          var path = p.join(config.gcsPrefix, package.name,
+              package.version.toString(), relative);
           return storage.insertFile(path, entity);
         }));
       }
@@ -60,9 +65,11 @@ class PackageUploader {
     return new DateFormat("yyyyMMddHHmmss").format(new DateTime.now().toUtc());
   }
 
-  Future<Null> _uploadMeta(String type, String timeString, Package package) async {
+  Future<Null> _uploadMeta(
+      String type, String timeString, Package package) async {
     _logger.info("Uploading package $type meta $package to GCS");
-    var path = p.join(config.gcsMeta, type, timeString, package.name, package.version.toString());
+    var path = p.join(config.gcsMeta, type, timeString, package.name,
+        package.version.toString());
     await storage.insertKey(path);
   }
 }

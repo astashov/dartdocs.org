@@ -28,10 +28,12 @@ class PubRetriever {
     var json;
     do {
       _logger.info("Retrieving page $page");
-      json = await retry(() => http.get(_getUrl(page)).then((r) => JSON.decode(r.body)));
+      json = await retry(
+          () => http.get(_getUrl(page)).then((r) => JSON.decode(r.body)));
       page += 1;
       var pageOfPackages = await Future.wait(json["packages"].map((packageUrl) {
-        return retry(() => http.get(packageUrl).then((r) => JSON.decode(r.body)));
+        return retry(
+            () => http.get(packageUrl).then((r) => JSON.decode(r.body)));
       }));
       var packages = pageOfPackages.map((packageMap) {
         return packageMap["versions"].map((version) {
@@ -54,7 +56,8 @@ class PubRetriever {
     } while (json["next"] != null);
     //} while (page < 2);
 
-    _logger.info("The number of the available packages - ${_currentList.length}");
+    _logger
+        .info("The number of the available packages - ${_currentList.length}");
     return new List.from(_currentList);
   }
 }

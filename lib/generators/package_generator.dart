@@ -41,7 +41,8 @@ class PackageGenerator {
           ]);
           await _archivePackage(logs, package);
         } on RunCommandError catch (e, s) {
-          _addLog(logs, Level.WARNING, "Got RunCommandError exception,\nstdout: ${e.stdout},\nstderr: ${e.stderr}");
+          _addLog(logs, Level.WARNING,
+              "Got RunCommandError exception,\nstdout: ${e.stdout},\nstderr: ${e.stderr}");
           erroredPackages.add(package);
         } catch (e, s) {
           _addLog(logs, Level.WARNING, "Got $e exception,\nstacktrace: $s");
@@ -75,28 +76,41 @@ class PackageGenerator {
   Future<Null> _install(List<LogRecord> logs, Package package) async {
     RunCommandError potentialFailure;
     try {
-      await _runCommand(logs, _timeoutCmd, [config.installTimeout.toString(), "pub", "cache", "add", package.name, "-v", package.version.toString()]);
+      await _runCommand(logs, _timeoutCmd, [
+        config.installTimeout.toString(),
+        "pub",
+        "cache",
+        "add",
+        package.name,
+        "-v",
+        package.version.toString()
+      ]);
     } on RunCommandError catch (e, _) {
       potentialFailure = e;
-      _addLog(logs, Level.WARNING, "While installing, got RunCommandError exception,\nstdout: ${e.stdout},\nstderr: ${e.stderr}");
+      _addLog(logs, Level.WARNING,
+          "While installing, got RunCommandError exception,\nstdout: ${e.stdout},\nstderr: ${e.stderr}");
     }
     var workingDirectory = package.pubCacheDir(config);
 
     if (new Directory(workingDirectory).existsSync()) {
       try {
-        await _runCommand(logs, _timeoutCmd, ["300", "pub", "get"], workingDirectory: workingDirectory);
+        await _runCommand(logs, _timeoutCmd, ["300", "pub", "get"],
+            workingDirectory: workingDirectory);
       } on RunCommandError catch (e, _) {
-        _addLog(logs, Level.WARNING, "While doing pub get, got RunCommandError exception,\nstdout: ${e.stdout},\nstderr: ${e.stderr}");
+        _addLog(logs, Level.WARNING,
+            "While doing pub get, got RunCommandError exception,\nstdout: ${e.stdout},\nstderr: ${e.stderr}");
       }
     } else if (potentialFailure != null) {
       throw potentialFailure;
     }
   }
 
-  Future _runCommand(List<LogRecord> logs, String command, Iterable<String> arguments,
+  Future _runCommand(
+      List<LogRecord> logs, String command, Iterable<String> arguments,
       {String workingDirectory}) async {
     _addLog(logs, Level.INFO, "Running '$command ${arguments.join(" ")}'");
-    var result = await Process.run(command, arguments, workingDirectory: workingDirectory);
+    var result = await Process.run(command, arguments,
+        workingDirectory: workingDirectory);
 
     if (result.stdout != "") {
       _addLog(logs, Level.INFO, "Stdout: ${result.stdout}");
@@ -116,16 +130,24 @@ class PackageGenerator {
       await directory.create(recursive: true);
     }
     var file = new File(path.join(package.outputDir(config), "log.txt"));
-    var contents = logs.map((logRecord) => logging.logFormatter(logRecord)).join("\n");
+    var contents =
+        logs.map((logRecord) => logging.logFormatter(logRecord)).join("\n");
     await file.writeAsString(contents);
   }
 
   Future<Null> _archivePackage(List<LogRecord> logs, Package package) async {
     var workingDir = path.join(config.outputDir, config.gcsPrefix);
-    var archivePath = path.join(config.outputDir, config.gcsPrefix, "${package.fullName}.tar.gz");
+    var archivePath = path.join(
+        config.outputDir, config.gcsPrefix, "${package.fullName}.tar.gz");
     await _runCommand(logs, "tar", [
-        "-C", workingDir, "-czf", archivePath, path.join(package.name, package.version.toString())]);
-    await new File(archivePath).rename(path.join(package.outputDir(config), "package.tar.gz"));
+      "-C",
+      workingDir,
+      "-czf",
+      archivePath,
+      path.join(package.name, package.version.toString())
+    ]);
+    await new File(archivePath)
+        .rename(path.join(package.outputDir(config), "package.tar.gz"));
   }
 }
 

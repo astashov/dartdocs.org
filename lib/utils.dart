@@ -46,7 +46,8 @@ int hash(Iterable<Object> objects) {
 /// ["1", "2", "3", "4"]
 /// ["5", "6", "7"]
 /// ["8", "9", "10"]
-Iterable<Iterable> inGroups(Iterable collection, int number, [fillWith = null]) {
+Iterable<Iterable> inGroups(Iterable collection, int number,
+    [fillWith = null]) {
   var coll = collection.toList();
   var division = collection.length ~/ number;
   var modulo = collection.length % number;

@@ -17,13 +17,16 @@ class IndexGenerator {
   IndexGenerator(this.config);
 
   Future<Null> generateErrors(Iterable<Package> packages) async {
-    Map<String, Iterable<Package>> groupedPackages = groupBy(packages, (package) => package.name);
+    Map<String, Iterable<Package>> groupedPackages =
+        groupBy(packages, (package) => package.name);
     var html = new StringBuffer();
     html.writeln(_generateHeader(MenuItem.failed));
     html.writeln("<dl>");
     groupedPackages.forEach((name, packageVersions) {
-      List<Package> sortedPackageVersions = new List.from(packageVersions)..sort((a, b) => b.compareTo(a));
-      html.writeln('<dt>${sortedPackageVersions.first.name}</dt><dd class="text-muted">');
+      List<Package> sortedPackageVersions = new List.from(packageVersions)
+        ..sort((a, b) => b.compareTo(a));
+      html.writeln(
+          '<dt>${sortedPackageVersions.first.name}</dt><dd class="text-muted">');
       html.write(sortedPackageVersions.map((package) {
         return "<a href='/${config.gcsPrefix}/${package.name}/${package.version}/log.txt'>${package.version}</a>";
       }).join(' &bull;\n'));
@@ -34,23 +37,27 @@ class IndexGenerator {
     await writeToFile(MenuItem.failed.url, html.toString());
   }
 
-  Future<Null> generateHistory(List<Package> sortedPackages, Set<Package> successfulPackages) async {
+  Future<Null> generateHistory(
+      List<Package> sortedPackages, Set<Package> successfulPackages) async {
     var html = new StringBuffer();
     html.writeln(_generateHeader(MenuItem.history));
     html.writeln("<table class='table table-hover'>");
-    html.writeln("<thead><tr><th>Package</th><th>Time</th><th>Status</th><th>Log</th></thead>");
+    html.writeln(
+        "<thead><tr><th>Package</th><th>Time</th><th>Status</th><th>Log</th></thead>");
     html.writeln("<tbody>");
     sortedPackages.forEach((package) {
       var isSuccessful = successfulPackages.contains(package);
       html.writeln("<tr${isSuccessful ? '' : ' class="danger"'}>");
       if (isSuccessful) {
-        html.writeln("<td><a href='/${package.url(config)}/index.html'>${package.fullName}</a></td>");
+        html.writeln(
+            "<td><a href='/${package.url(config)}/index.html'>${package.fullName}</a></td>");
       } else {
         html.writeln("<td>${package.fullName}</td>");
       }
       html.writeln("<td>${package.updatedAt}</td>");
       html.writeln("<td>${isSuccessful ? 'Success' : '<em>Failure</em>'}</td>");
-      html.writeln("<td><a href='/${package.logUrl(config)}'>build log</a></td>");
+      html.writeln(
+          "<td><a href='/${package.logUrl(config)}'>build log</a></td>");
       html.writeln("</tr>");
     });
     html.writeln("</tbody></table>");
@@ -59,13 +66,16 @@ class IndexGenerator {
   }
 
   Future<Null> generateHome(Iterable<Package> packages) async {
-    Map<String, Iterable<Package>> groupedPackages = groupBy(packages, (package) => package.name);
+    Map<String, Iterable<Package>> groupedPackages =
+        groupBy(packages, (package) => package.name);
     var html = new StringBuffer();
     html.writeln(_generateHeader(MenuItem.home));
     html.writeln("<dl>");
     groupedPackages.forEach((name, packageVersions) {
-      List<Package> sortedPackageVersions = new List.from(packageVersions)..sort((a, b) => b.compareTo(a));
-      html.writeln('<dt>${sortedPackageVersions.first.name}</dt><dd class="text-muted">');
+      List<Package> sortedPackageVersions = new List.from(packageVersions)
+        ..sort((a, b) => b.compareTo(a));
+      html.writeln(
+          '<dt>${sortedPackageVersions.first.name}</dt><dd class="text-muted">');
       html.write(sortedPackageVersions.map((package) {
         return "<a href='/${config.gcsPrefix}/${package.name}/${package.version}/index.html'>${package.version}</a>";
       }).join(' &bull;\n'));
@@ -155,8 +165,10 @@ class IndexGenerator {
 
 class MenuItem {
   static const MenuItem home = const MenuItem("index.html", "Home");
-  static const MenuItem history = const MenuItem("history/index.html", "Build history");
-  static const MenuItem failed = const MenuItem("failed/index.html", "Build failures");
+  static const MenuItem history =
+      const MenuItem("history/index.html", "Build history");
+  static const MenuItem failed =
+      const MenuItem("failed/index.html", "Build failures");
   static const Iterable<MenuItem> all = const [home, history, failed];
 
   final String url;
@@ -168,4 +180,6 @@ class MenuItem {
   }
 }
 
-final Iterable<String> allIndexUrls = []..addAll(MenuItem.all.map((mi) => mi.url))..add("index.json");
+final Iterable<String> allIndexUrls = []
+  ..addAll(MenuItem.all.map((mi) => mi.url))
+  ..add("index.json");

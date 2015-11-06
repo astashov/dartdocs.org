@@ -36,11 +36,20 @@ class _PackageGenerator {
 
   int docsVersion;
 
-  _PackageGenerator(this.config, this.pubRetriever, this.storage, this.datastore, this.datastoreRetriever,
-      this.generator, this.packageCleaner, this.cdnCleaner, this.uploader);
+  _PackageGenerator(
+      this.config,
+      this.pubRetriever,
+      this.storage,
+      this.datastore,
+      this.datastoreRetriever,
+      this.generator,
+      this.packageCleaner,
+      this.cdnCleaner,
+      this.uploader);
 
   factory _PackageGenerator.build(String dirroot) {
-    var config = new Config.buildFromFiles(dirroot, "config.yaml", "credentials.yaml");
+    var config =
+        new Config.buildFromFiles(dirroot, "config.yaml", "credentials.yaml");
     var pubRetriever = new PubRetriever();
     var storage = new Storage(config);
     var datastore = new Datastore(config);
@@ -49,8 +58,8 @@ class _PackageGenerator {
     var packageCleaner = new PackageCleaner(config);
     var cdnCleaner = new CdnCleaner(config);
     var uploader = new PackageUploader(config, storage);
-    return new _PackageGenerator(
-        config, pubRetriever, storage, datastore, storageRetriever, generator, packageCleaner, cdnCleaner, uploader);
+    return new _PackageGenerator(config, pubRetriever, storage, datastore,
+        storageRetriever, generator, packageCleaner, cdnCleaner, uploader);
   }
 
   Future<Null> initialize() async {
@@ -69,7 +78,8 @@ class _PackageGenerator {
     return shardedPackages.getRange(0, min(20, shardedPackages.length));
   }
 
-  Future<Null> handlePackages(Iterable<Package> packages, {bool shouldDeleteOldPackages: false}) async {
+  Future<Null> handlePackages(Iterable<Package> packages,
+      {bool shouldDeleteOldPackages: false}) async {
     if (shouldDeleteOldPackages) {
       packageCleaner.deleteSync();
     }
@@ -86,8 +96,10 @@ class _PackageGenerator {
       return datastore.upsert(package, docsVersion, status: "error");
     }));
     var latestPackages = _findLatestPackages(successfulPackages);
-    var latestHtmlByPackages = new LatestGenerator(config).generate(latestPackages);
-    await new LatestUploader(config, storage).uploadLatestFiles(latestHtmlByPackages);
+    var latestHtmlByPackages =
+        new LatestGenerator(config).generate(latestPackages);
+    await new LatestUploader(config, storage)
+        .uploadLatestFiles(latestHtmlByPackages);
   }
 
   Iterable<Package> _findLatestPackages(Iterable<Package> packages) {
@@ -106,9 +118,14 @@ class _PackageGenerator {
 main(List<String> args) async {
   try {
     var parser = new ArgParser();
-    parser.addOption('name', help: "If specified (together with --version) - will regenerate that package");
-    parser.addOption('version', help: "If specified (together with --name) - will regenerate that package");
-    parser.addOption('dirroot', help: "Specify the application directory, if not current");
+    parser.addOption('name',
+        help:
+            "If specified (together with --version) - will regenerate that package");
+    parser.addOption('version',
+        help:
+            "If specified (together with --name) - will regenerate that package");
+    parser.addOption('dirroot',
+        help: "Specify the application directory, if not current");
     parser.addFlag('help', negatable: false, help: "Show help");
     var argsResults = parser.parse(args);
     if (argsResults["help"]) {
@@ -122,7 +139,8 @@ main(List<String> args) async {
 
     if (argsResults["name"] != null && argsResults["version"] != null) {
       await packageGenerator.initialize();
-      var package = new Package.build(argsResults["name"], argsResults["version"]);
+      var package =
+          new Package.build(argsResults["name"], argsResults["version"]);
       await packageGenerator.handlePackages([package]);
       return;
     } else {
@@ -130,7 +148,8 @@ main(List<String> args) async {
         await packageGenerator.initialize();
         var packages = await packageGenerator.retrieveNextPackages();
         if (packages.isNotEmpty) {
-          await packageGenerator.handlePackages(packages, shouldDeleteOldPackages: true);
+          await packageGenerator.handlePackages(packages,
+              shouldDeleteOldPackages: true);
         } else {
           _logger.info("Sleeping for 3 minutes...");
           await new Future.delayed(new Duration(minutes: 3));
