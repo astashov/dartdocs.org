@@ -117,16 +117,16 @@ class _PackageGenerator {
 
 main(List<String> args) async {
   try {
-    var parser = new ArgParser();
-    parser.addOption('name',
-        help:
-            "If specified (together with --version) - will regenerate that package");
-    parser.addOption('version',
-        help:
-            "If specified (together with --name) - will regenerate that package");
-    parser.addOption('dirroot',
-        help: "Specify the application directory, if not current");
-    parser.addFlag('help', negatable: false, help: "Show help");
+    var parser = new ArgParser()
+      ..addOption('name',
+          help:
+              "If specified (together with --version) - will regenerate that package")
+      ..addOption('version',
+          help:
+              "If specified (together with --name) - will regenerate that package")
+      ..addOption('dirroot',
+          help: "Specify the application directory, if not current")
+      ..addFlag('help', negatable: false, help: "Show help");
     var argsResults = parser.parse(args);
     if (argsResults["help"]) {
       print("Generates packages and uploads them to GCS, in an infinite loop. "
