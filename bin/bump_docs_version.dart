@@ -1,7 +1,5 @@
 library dartdocorg.bin.bump_docs_version;
 
-import 'dart:io';
-
 import 'package:dartdocorg/config.dart';
 import 'package:dartdocorg/logging.dart' as logging;
 import 'package:logging/logging.dart';
@@ -18,7 +16,7 @@ main(List<String> args) async {
   if (argsResults["help"]) {
     print("Bumps the docsVersion global variable, which will cause regenerating all the packages from pub.\n");
     print(parser.usage);
-    exit(0);
+    return;
   }
   var config = new Config.buildFromFiles(argsResults["dirroot"], "config.yaml", "credentials.yaml");
   var datastore = new Datastore(config);
@@ -26,7 +24,6 @@ main(List<String> args) async {
   _logger.info("Setting new docsVersion: $docsVersion");
   await datastore.bumpDocsVersion(docsVersion);
   _logger.info("Done");
-  exit(0);
 }
 
 Logger _logger = new Logger("dartdocorg");

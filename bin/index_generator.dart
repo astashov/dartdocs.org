@@ -23,7 +23,7 @@ main(List<String> args) async {
     if (argsResults["help"]) {
       print("Generates index pages (like /index.html, /failed/index.html, etc) and uploads them to GCS in an infinite loop.\n");
       print(parser.usage);
-      exit(0);
+      return;
     }
     logging.initialize();
     var config = new Config.buildFromFiles(argsResults["dirroot"], "config.yaml", "credentials.yaml");
@@ -79,7 +79,7 @@ main(List<String> args) async {
   } catch (error, stackTrace) {
     print(error);
     print(stackTrace);
-    exit(1);
+    exitCode = 1;
   }
 }
 

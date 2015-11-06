@@ -113,7 +113,7 @@ main(List<String> args) async {
       print("Generates packages and uploads them to GCS, in an infinite loop. "
           "Basically, the main script of the app, which does all the important work.\n");
       print(parser.usage);
-      exit(0);
+      return;
     }
     logging.initialize();
     var packageGenerator = new _PackageGenerator.build(argsResults["dirroot"]);
@@ -122,7 +122,7 @@ main(List<String> args) async {
       await packageGenerator.initialize();
       var package = new Package.build(argsResults["name"], argsResults["version"]);
       await packageGenerator.handlePackages([package]);
-      exit(0);
+      return;
     } else {
       while (true) {
         await packageGenerator.initialize();
@@ -138,7 +138,7 @@ main(List<String> args) async {
   } catch (error, stackTrace) {
     print(error);
     print(stackTrace);
-    exit(1);
+    exitCode = 1;
   }
 }
 

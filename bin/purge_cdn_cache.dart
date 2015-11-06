@@ -1,7 +1,5 @@
 library dartdocorg.bin.purge_cdn_cache;
 
-import 'dart:io';
-
 import 'package:dartdocorg/config.dart';
 import 'package:dartdocorg/logging.dart' as logging;
 import 'package:logging/logging.dart';
@@ -18,14 +16,13 @@ main(List<String> args) async {
     print("Purges the CloudFront CDN cache for the whole site. Useful when we need "
         "to regenerate everything with the new dartdoc verion\n");
     print(parser.usage);
-    exit(0);
+    return;
   }
   var config = new Config.buildFromFiles(argsResults["dirroot"], "config.yaml", "credentials.yaml");
   var cdnCleaner = new CdnCleaner(config);
   _logger.info("Clearing all CDN cache");
   await cdnCleaner.purgeAll();
   _logger.info("Done");
-  exit(0);
 }
 
 Logger _logger = new Logger("purge_cdn_cache");
