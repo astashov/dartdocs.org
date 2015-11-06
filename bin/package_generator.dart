@@ -1,25 +1,25 @@
 library dartdocorg.bin.package_generator;
 
-import 'dart:io';
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:args/args.dart';
+import 'package:dartdocorg/cleaners/cdn_cleaner.dart';
+import 'package:dartdocorg/cleaners/package_cleaner.dart';
 import 'package:dartdocorg/config.dart';
+import 'package:dartdocorg/datastore_retriever.dart';
+import 'package:dartdocorg/datastore.dart';
+import 'package:dartdocorg/generators/latest_generator.dart';
 import 'package:dartdocorg/generators/package_generator.dart';
 import 'package:dartdocorg/logging.dart' as logging;
 import 'package:dartdocorg/package.dart';
 import 'package:dartdocorg/pub_retriever.dart';
 import 'package:dartdocorg/shard.dart';
 import 'package:dartdocorg/storage.dart';
-import 'package:dartdocorg/datastore_retriever.dart';
+import 'package:dartdocorg/uploaders/latest_uploader.dart';
 import 'package:dartdocorg/uploaders/package_uploader.dart';
 import 'package:logging/logging.dart';
-import 'package:dartdocorg/cleaners/package_cleaner.dart';
-import 'package:dartdocorg/datastore.dart';
-import 'package:dartdocorg/cleaners/cdn_cleaner.dart';
-import 'package:dartdocorg/generators/latest_generator.dart';
-import 'package:dartdocorg/uploaders/latest_uploader.dart';
 
 final Logger _logger = new Logger("dartdocorg");
 
