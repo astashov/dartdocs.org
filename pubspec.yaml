@@ -1,7 +1,7 @@
 name: dartdocorg
-version: 0.0.1
 description: Generates the Dart documentation for all the packages in pub
-
+environment:
+  sdk: '>=1.12.0 <2.0.0'
 dependencies:
   args: any
   googleapis_auth: any
