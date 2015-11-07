@@ -1,5 +1,7 @@
 library dartdocorg.logging;
 
+import 'dart:convert';
+
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 
@@ -16,14 +18,38 @@ void initialize([int index]) {
 String logFormatter(LogRecord record,
     {int index, bool shouldConvertToPTZ: false}) {
   var timeString = new DateFormat("H:m:s.S").format(record.time);
-  String message = "";
+  var buffer = new StringBuffer();
   var name = record.loggerName.replaceAll(new RegExp(r"^crossdart\."), "");
   if (index != null) {
-    message += "$index - ";
+    buffer.write("$index - ");
   }
-  message += "$timeString [${record.level.name}] $name: ${record.message}";
-  if (record.error != null) {
-    message += "\n${record.error}\n${record.stackTrace}";
+  buffer.write("$timeString ");
+
+  // make an indent string that's the length of the buffer so far
+  // used to indent multi-line messages
+  var indent = ' ' * buffer.length;
+
+  buffer.write("[${record.level.name}] $name:");
+
+  var lines =
+      _linesForObjectStrings([record.message, record.error, record.stackTrace])
+          .toList();
+
+  if (lines.length == 1) {
+    // If the message is only one line, put it on the line with the header
+    buffer.write(lines.single);
+  } else if (lines.length > 1) {
+    // If it's more than one line, indent the contents
+    buffer.writeln();
+    buffer.writeAll(lines.map((line) => "$indent$line"), '\n');
   }
-  return message;
+  return buffer.toString();
+}
+
+Iterable<String> _linesForObjectStrings(List objects) sync* {
+  for (var object in objects) {
+    if (object != null) {
+      yield* LineSplitter.split('$object');
+    }
+  }
 }
