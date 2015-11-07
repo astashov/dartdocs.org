@@ -10,7 +10,7 @@ import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
 import 'package:dartdocorg/utils.dart';
 
-var _logger = new Logger("package_generator");
+final Logger _logger = new Logger("package_generator");
 
 class PackageGenerator {
   final Config config;
@@ -57,8 +57,8 @@ class PackageGenerator {
   }
 
   void _addLog(List<LogRecord> logs, Level level, String message) {
-    logs.add(new LogRecord(Level.INFO, message, "dartdoc"));
-    _logger.info(message);
+    logs.add(new LogRecord(level, message, "dartdoc"));
+    _logger.log(level, message);
   }
 
   String _timeoutCmdMemo;
