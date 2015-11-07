@@ -20,6 +20,7 @@ import 'package:dartdocorg/storage.dart';
 import 'package:dartdocorg/uploaders/latest_uploader.dart';
 import 'package:dartdocorg/uploaders/package_uploader.dart';
 import 'package:logging/logging.dart';
+import 'package:stack_trace/stack_trace.dart';
 
 final Logger _logger = new Logger("dartdocorg");
 
@@ -116,7 +117,7 @@ class _PackageGenerator {
 }
 
 main(List<String> args) async {
-  try {
+  await Chain.capture(() async {
     var parser = new ArgParser()
       ..addOption('name',
           help:
@@ -156,9 +157,10 @@ main(List<String> args) async {
         }
       }
     }
-  } catch (error, stackTrace) {
+  },
+      onError: ((error, chain) {
     print(error);
-    print(stackTrace);
+    print(chain.terse);
     exitCode = 1;
-  }
+  }));
 }

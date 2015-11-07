@@ -6,9 +6,10 @@ import 'dart:io';
 import 'package:dartdocorg/config.dart';
 import 'package:dartdocorg/logging.dart' as logging;
 import 'package:dartdocorg/package.dart';
+import 'package:dartdocorg/utils.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
-import 'package:dartdocorg/utils.dart';
+import 'package:stack_trace/stack_trace.dart';
 
 final Logger _logger = new Logger("package_generator");
 
@@ -45,7 +46,8 @@ class PackageGenerator {
               "Got RunCommandError exception,\nstdout: ${e.stdout},\nstderr: ${e.stderr}");
           erroredPackages.add(package);
         } catch (e, s) {
-          _addLog(logs, Level.WARNING, "Got $e exception,\nstacktrace: $s");
+          var chain = new Chain.forTrace(s).terse;
+          _addLog(logs, Level.WARNING, "EXCEPTION:\n$e\nSTACK:\n$chain");
           erroredPackages.add(package);
         } finally {
           await _saveLogsToFile(logs, package);
