@@ -63,30 +63,12 @@ class PackageGenerator {
     _logger.log(level, message);
   }
 
-  String _timeoutCmdMemo;
-  String get _timeoutCmd {
-    if (_timeoutCmdMemo == null) {
-      if (Process.runSync("which", ["gtimeout"]).stdout != "") {
-        _timeoutCmdMemo = "gtimeout";
-      } else {
-        _timeoutCmdMemo = "timeout";
-      }
-    }
-    return _timeoutCmdMemo;
-  }
-
   Future<Null> _install(List<LogRecord> logs, Package package) async {
     RunCommandError potentialFailure;
     try {
-      await _runCommand(logs, _timeoutCmd, [
-        config.installTimeout.toString(),
-        "pub",
-        "cache",
-        "add",
-        package.name,
-        "-v",
-        package.version.toString()
-      ]);
+      await _runCommand(logs, "pub",
+          ["cache", "add", package.name, "-v", package.version.toString()],
+          duration: new Duration(seconds: config.installTimeout));
     } on RunCommandError catch (e, _) {
       potentialFailure = e;
       _addLog(logs, Level.WARNING,
@@ -96,8 +78,9 @@ class PackageGenerator {
 
     if (new Directory(workingDirectory).existsSync()) {
       try {
-        await _runCommand(logs, _timeoutCmd, ["300", "pub", "get"],
-            workingDirectory: workingDirectory);
+        await _runCommand(logs, 'pub', ["get"],
+            workingDirectory: workingDirectory,
+            duration: const Duration(minutes: 5));
       } on RunCommandError catch (e, _) {
         _addLog(logs, Level.WARNING,
             "While doing pub get, got RunCommandError exception,\nstdout: ${e.stdout},\nstderr: ${e.stderr}");
@@ -109,10 +92,17 @@ class PackageGenerator {
 
   Future _runCommand(
       List<LogRecord> logs, String command, Iterable<String> arguments,
-      {String workingDirectory}) async {
+      {String workingDirectory, Duration duration}) async {
     _addLog(logs, Level.INFO, "Running '$command ${arguments.join(" ")}'");
-    var result = await Process.run(command, arguments,
-        workingDirectory: workingDirectory);
+
+    ProcessResult result;
+    if (duration == null) {
+      result = await Process.run(command, arguments,
+          workingDirectory: workingDirectory);
+    } else {
+      result = await runProcessWithTimeout(command, arguments, duration,
+          workingDirectory: workingDirectory);
+    }
 
     if (result.stdout != "") {
       _addLog(logs, Level.INFO, "Stdout: ${result.stdout}");
