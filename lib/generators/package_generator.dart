@@ -42,8 +42,7 @@ class PackageGenerator {
           ]);
           await _archivePackage(logs, package);
         } on RunCommandError catch (e, s) {
-          _addLog(logs, Level.WARNING,
-              "Got RunCommandError exception,\nstdout: ${e.stdout},\nstderr: ${e.stderr}");
+          _addLog(logs, Level.WARNING, "Got RunCommandError exception\n${e}");
           erroredPackages.add(package);
         } catch (e, s) {
           var chain = new Chain.forTrace(s).terse;
@@ -69,10 +68,10 @@ class PackageGenerator {
       await _runCommand(logs, "pub",
           ["cache", "add", package.name, "-v", package.version.toString()],
           duration: new Duration(seconds: config.installTimeout));
-    } on RunCommandError catch (e, _) {
+    } on RunCommandError catch (e) {
       potentialFailure = e;
       _addLog(logs, Level.WARNING,
-          "While installing, got RunCommandError exception,\nstdout: ${e.stdout},\nstderr: ${e.stderr}");
+          "While installing, got RunCommandError exception\n${e}");
     }
     var workingDirectory = package.pubCacheDir(config);
 
@@ -81,9 +80,9 @@ class PackageGenerator {
         await _runCommand(logs, 'pub', ["get"],
             workingDirectory: workingDirectory,
             duration: const Duration(minutes: 5));
-      } on RunCommandError catch (e, _) {
+      } on RunCommandError catch (e) {
         _addLog(logs, Level.WARNING,
-            "While doing pub get, got RunCommandError exception,\nstdout: ${e.stdout},\nstderr: ${e.stderr}");
+            "While doing pub get, got RunCommandError exception\n${e}");
       }
     } else if (potentialFailure != null) {
       throw potentialFailure;
@@ -91,7 +90,7 @@ class PackageGenerator {
   }
 
   Future _runCommand(
-      List<LogRecord> logs, String command, Iterable<String> arguments,
+      List<LogRecord> logs, String command, List<String> arguments,
       {String workingDirectory, Duration duration}) async {
     _addLog(logs, Level.INFO, "Running '$command ${arguments.join(" ")}'");
 
@@ -112,7 +111,8 @@ class PackageGenerator {
     }
 
     if (result.exitCode != 0) {
-      throw new RunCommandError(result.stdout, result.stderr);
+      throw new RunCommandError(
+          command, arguments, result.exitCode, result.stdout, result.stderr);
     }
   }
 
@@ -143,8 +143,28 @@ class PackageGenerator {
   }
 }
 
-class RunCommandError implements Exception {
+class RunCommandError extends ProcessException {
   final String stdout;
   final String stderr;
-  RunCommandError(this.stdout, this.stderr);
+
+  RunCommandError(String executable, List<String> arguments, int errorCode,
+      this.stdout, this.stderr)
+      : super(executable, arguments, '', errorCode);
+
+  String toString() {
+    var buffer = new StringBuffer(super.toString());
+    if (stdout != null && stdout.isNotEmpty) {
+      buffer.writeln();
+      buffer.writeln('stdout:');
+      buffer.write(stdout.trim());
+    }
+
+    if (stderr != null && stderr.isNotEmpty) {
+      buffer.writeln();
+      buffer.writeln('stderr:');
+      buffer.write(stderr.trim());
+    }
+
+    return buffer.toString();
+  }
 }
