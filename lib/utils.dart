@@ -1,5 +1,8 @@
 library dartdocorg.utils;
 
+import 'dart:async';
+import 'dart:io';
+
 Map groupBy(Iterable collection, condition(i)) {
   return collection.fold({}, (memo, item) {
     var key = condition(item);
@@ -89,4 +92,24 @@ Iterable<Iterable> inGroupsOf(Iterable collection, int number) {
     }
     return result;
   }
+}
+
+Future<ProcessResult> runProcessWithTimeout(
+    String executable, List<String> arguments, Duration timeout,
+    {String workingDirectory}) async {
+  Process proc = await Process.start(executable, arguments,
+      workingDirectory: workingDirectory);
+
+  var timer = new Timer(timeout, () {
+    proc.kill();
+  });
+
+  var stdout = await SYSTEM_ENCODING.decodeStream(proc.stdout);
+  var stderr = await SYSTEM_ENCODING.decodeStream(proc.stderr);
+
+  var exitCode = await proc.exitCode;
+
+  timer.cancel();
+
+  return new ProcessResult(proc.pid, exitCode, stdout, stderr);
 }

@@ -17,6 +17,14 @@ packages:
     description: args
     source: hosted
     version: "0.13.2"
+  async:
+    description: async
+    source: hosted
+    version: "1.4.0"
+  barback:
+    description: barback
+    source: hosted
+    version: "0.15.2+7"
   charcode:
     description: charcode
     source: hosted
@@ -69,6 +77,10 @@ packages:
     description: http
     source: hosted
     version: "0.11.3+2"
+  http_multi_server:
+    description: http_multi_server
+    source: hosted
+    version: "1.3.2"
   http_parser:
     description: http_parser
     source: hosted
@@ -85,6 +97,14 @@ packages:
     description: logging
     source: hosted
     version: "0.11.2"
+  matcher:
+    description: matcher
+    source: hosted
+    version: "0.12.0+1"
+  mime:
+    description: mime
+    source: hosted
+    version: "0.9.3"
   mockable_filesystem:
     description: mockable_filesystem
     source: hosted
@@ -105,10 +125,34 @@ packages:
     description: plugin
     source: hosted
     version: "0.1.0"
+  pool:
+    description: pool
+    source: hosted
+    version: "1.2.1"
   pub_semver:
     description: pub_semver
     source: hosted
     version: "1.2.3"
+  shelf:
+    description: shelf
+    source: hosted
+    version: "0.6.4+1"
+  shelf_static:
+    description: shelf_static
+    source: hosted
+    version: "0.2.3+1"
+  shelf_web_socket:
+    description: shelf_web_socket
+    source: hosted
+    version: "0.0.1+4"
+  source_map_stack_trace:
+    description: source_map_stack_trace
+    source: hosted
+    version: "1.0.4"
+  source_maps:
+    description: source_maps
+    source: hosted
+    version: "0.10.1"
   source_span:
     description: source_span
     source: hosted
@@ -125,6 +169,10 @@ packages:
     description: supports_color
     source: hosted
     version: "0.1.1"
+  test:
+    description: test
+    source: hosted
+    version: "0.12.5+1"
   tuneup:
     description: tuneup
     source: hosted
