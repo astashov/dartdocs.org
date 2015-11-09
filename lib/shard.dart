@@ -22,11 +22,11 @@ import 'dart:io';
 
 import 'package:dartdocorg/config.dart';
 import 'package:dartdocorg/utils.dart';
-import 'package:googleapis/compute/v1.dart';
 import 'package:googleapis_auth/auth_io.dart';
+import 'package:googleapis/compute/v1.dart';
 import 'package:logging/logging.dart';
 
-var _logger = new Logger("shard");
+final _logger = new Logger("shard");
 
 const _scopes = const [ComputeApi.ComputeReadonlyScope];
 

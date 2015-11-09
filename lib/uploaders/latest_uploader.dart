@@ -3,13 +3,13 @@ library dartdocorg.uploaders.latest_uploader;
 import 'dart:async';
 
 import 'package:dartdocorg/config.dart';
+import 'package:dartdocorg/package.dart';
 import 'package:dartdocorg/storage.dart';
+import 'package:dartdocorg/utils.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
-import 'package:dartdocorg/package.dart';
-import 'package:dartdocorg/utils.dart';
 
-Logger _logger = new Logger("latest_uploader");
+final Logger _logger = new Logger("latest_uploader");
 
 class LatestUploader {
   final Config config;

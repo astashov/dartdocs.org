@@ -1,18 +1,18 @@
 library dartdocorg.bin.index_generator;
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:args/args.dart';
 import 'package:dartdocorg/config.dart';
+import 'package:dartdocorg/datastore_retriever.dart';
+import 'package:dartdocorg/datastore.dart';
 import 'package:dartdocorg/generators/index_generator.dart';
 import 'package:dartdocorg/logging.dart' as logging;
 import 'package:dartdocorg/storage.dart';
-import 'package:dartdocorg/datastore_retriever.dart';
 import 'package:dartdocorg/uploaders/index_uploader.dart';
 import 'package:logging/logging.dart';
-import 'package:dartdocorg/datastore.dart';
-import 'package:args/args.dart';
-import 'dart:async';
 
 final Logger _logger = new Logger("dartdocorg");
 

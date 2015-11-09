@@ -1,11 +1,11 @@
 library dartdocorg.bin.bump_docs_version;
 
-import 'package:dartdocorg/config.dart';
-import 'package:dartdocorg/logging.dart' as logging;
-import 'package:logging/logging.dart';
-import 'package:dartdocorg/datastore.dart';
-import 'package:intl/intl.dart';
 import 'package:args/args.dart';
+import 'package:dartdocorg/config.dart';
+import 'package:dartdocorg/datastore.dart';
+import 'package:dartdocorg/logging.dart' as logging;
+import 'package:intl/intl.dart';
+import 'package:logging/logging.dart';
 
 final Logger _logger = new Logger("dartdocorg");
 

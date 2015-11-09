@@ -4,11 +4,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dartdocorg/package.dart';
+import 'package:dartdocorg/utils/retry.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
-import 'package:dartdocorg/utils/retry.dart';
 
-var _logger = new Logger("pub_retriever");
+final _logger = new Logger("pub_retriever");
 
 String _getUrl(int page) => "https://pub.dartlang.org/packages.json?page=$page";
 

@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:googleapis_auth/auth.dart';
-import 'package:yaml/yaml.dart' as yaml;
 import 'package:path/path.dart' as p;
+import 'package:yaml/yaml.dart' as yaml;
 
 class Config {
   final String dirroot;

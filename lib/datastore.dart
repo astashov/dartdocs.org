@@ -3,13 +3,13 @@ library dartdocorg.datastore;
 import 'dart:async';
 
 import 'package:dartdocorg/config.dart';
-import 'package:googleapis_beta/datastore/v1beta2.dart';
-import 'package:googleapis_auth/auth_io.dart';
 import 'package:dartdocorg/package.dart';
 import 'package:dartdocorg/utils/retry.dart';
+import 'package:googleapis_auth/auth_io.dart';
+import 'package:googleapis_beta/datastore/v1beta2.dart';
 import 'package:logging/logging.dart';
 
-Logger _logger = new Logger("datastore");
+final Logger _logger = new Logger("datastore");
 
 class Datastore {
   static const _scopes = const [

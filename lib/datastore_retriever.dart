@@ -2,11 +2,11 @@ library dartdocorg.datastore_retriever;
 
 import 'dart:async';
 
-import 'package:dartdocorg/package.dart';
 import 'package:dartdocorg/datastore.dart';
+import 'package:dartdocorg/package.dart';
 import 'package:logging/logging.dart';
 
-var _logger = new Logger("datastore_retriever");
+final _logger = new Logger("datastore_retriever");
 
 class DatastoreRetriever {
   Set<Package> _successList = new Set();

@@ -3,7 +3,7 @@ library dartdocorg.utils.retry;
 import 'dart:async';
 import 'package:logging/logging.dart';
 
-Logger _logger = new Logger("retry");
+final Logger _logger = new Logger("retry");
 
 const _defaultDurations = const [
   const Duration(seconds: 3),

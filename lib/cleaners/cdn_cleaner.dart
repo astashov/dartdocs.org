@@ -1,19 +1,19 @@
 library dartdocorg.cleaners.cdn_cleaner;
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:http/http.dart';
-import 'package:path/path.dart' as p;
 import 'package:dartdocorg/config.dart';
-import 'package:dartdocorg/package.dart';
-import 'package:logging/logging.dart';
-import 'package:dartdocorg/utils/retry.dart';
 import 'package:dartdocorg/generators/index_generator.dart';
+import 'package:dartdocorg/package.dart';
 import 'package:dartdocorg/utils.dart';
+import 'package:dartdocorg/utils/retry.dart';
+import 'package:http/http.dart';
+import 'package:logging/logging.dart';
+import 'package:path/path.dart' as p;
 
-var _logger = new Logger("cdn_cleaner");
+final _logger = new Logger("cdn_cleaner");
 
 class CdnCleaner {
   final Config config;

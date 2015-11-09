@@ -4,13 +4,13 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dartdocorg/config.dart';
-import 'package:googleapis/storage/v1.dart' as s;
-import 'package:googleapis_auth/auth_io.dart';
-import 'package:path/path.dart' as p;
 import 'package:dartdocorg/utils/retry.dart';
+import 'package:googleapis_auth/auth_io.dart';
+import 'package:googleapis/storage/v1.dart' as s;
 import 'package:logging/logging.dart';
+import 'package:path/path.dart' as p;
 
-Logger _logger = new Logger("storage");
+final Logger _logger = new Logger("storage");
 
 class Storage {
   static const _scopes = const [s.StorageApi.DevstorageReadWriteScope];

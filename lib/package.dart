@@ -4,8 +4,8 @@ import 'dart:convert';
 
 import 'package:dartdocorg/config.dart';
 import 'package:dartdocorg/utils.dart';
-import 'package:pub_semver/pub_semver.dart';
 import 'package:path/path.dart' as path;
+import 'package:pub_semver/pub_semver.dart';
 
 class Package implements Comparable<Package> {
   static const String logFileName = "log.txt";

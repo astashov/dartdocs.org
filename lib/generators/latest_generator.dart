@@ -1,12 +1,13 @@
 library dartdocorg.generators.latest_generator;
 
+import 'dart:io';
+
 import 'package:dartdocorg/config.dart';
 import 'package:dartdocorg/package.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
-import 'dart:io';
 
-var _logger = new Logger("latest_generator");
+final _logger = new Logger("latest_generator");
 
 class LatestGenerator {
   final Config config;

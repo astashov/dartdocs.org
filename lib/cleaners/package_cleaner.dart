@@ -5,10 +5,10 @@ import 'dart:io';
 import 'package:dartdocorg/config.dart';
 import 'package:dartdocorg/package.dart';
 import 'package:logging/logging.dart';
-import 'package:yaml/yaml.dart' as yaml;
 import 'package:path/path.dart' as p;
+import 'package:yaml/yaml.dart' as yaml;
 
-var _logger = new Logger("package_cleaner");
+final _logger = new Logger("package_cleaner");
 
 class PackageCleaner {
   final Config config;
