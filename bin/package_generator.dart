@@ -68,7 +68,7 @@ class _PackageGenerator {
   }
 
   Future<Iterable<Package>> retrieveNextPackages() async {
-    List<Package> allPackages = (await pubRetriever.update());
+    List<Package> allPackages = await pubRetriever.update();
     await datastoreRetriever.update(docsVersion);
     var allDataStorePackages = datastoreRetriever.allPackages;
     allPackages.removeWhere((p) => allDataStorePackages.contains(p));
