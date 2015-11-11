@@ -54,7 +54,6 @@ class PubRetriever {
         });
       }
     } while (json["next"] != null);
-    //} while (page < 2);
 
     _logger
         .info("The number of the available packages - ${_currentList.length}");
