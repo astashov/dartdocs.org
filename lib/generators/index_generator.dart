@@ -9,6 +9,7 @@ import 'package:dartdocorg/package.dart';
 import 'package:dartdocorg/utils.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
+import 'package:pub_semver/pub_semver.dart';
 
 var _logger = new Logger("index_generator");
 
@@ -89,14 +90,19 @@ class IndexGenerator {
   Future<Null> generateJsonIndex(Iterable<Package> packages) async {
     var finalMap = packages.fold({}, (Map memo, Package package) {
       if (memo[package.name] == null) {
-        memo[package.name] = {};
+        memo[package.name] = {"versions": {}};
       }
       var url = "${config.hostedUrl}/${package.url(config)}";
-      memo[package.name][package.version.toString()] = {
+      memo[package.name]["versions"][package.version.toString()] = {
         "html": "$url/index.html",
         "archive": "$url/package.tar.gz"
       };
       return memo;
+    });
+    finalMap.forEach((name, values) {
+      var versions = values["versions"].keys.map((v) => new Version.parse(v)).toList();
+      versions.sort();
+      values["versions_order"] = versions.map((v) => v.toString()).toList();
     });
     await writeToFile("index.json", JSON.encode(finalMap));
   }
