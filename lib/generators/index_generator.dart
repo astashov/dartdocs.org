@@ -160,8 +160,8 @@ class IndexGenerator {
           ${MenuItem.all.map((mi) => mi.toHtml(mi == activeItem)).join("\n")}
         </ul>
         <p class="navbar-text pull-right">
-          <a href="https://github.com/astashov/dartdocorg">Github</a> |
-          <a href="https://github.com/astashov/dartdocorg/issues">Issues</a>
+          <a href="https://github.com/astashov/dartdocs.org">Github</a> |
+          <a href="https://github.com/astashov/dartdocs.org/issues">Issues</a>
         </p>
       </div>
     </nav>
