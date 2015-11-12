@@ -105,7 +105,7 @@ class _PackageGenerator {
 
   Iterable<Package> _findLatestPackages(Iterable<Package> packages) {
     return packages.where((p) {
-      List<Package> samePackages = pubRetriever.packagesByName[p.name].toList();
+      List<Package> samePackages = pubRetriever.packagesByName[p.name]?.toList();
       if (samePackages != null && samePackages.isNotEmpty) {
         samePackages.sort();
         return p == samePackages.last;
@@ -157,8 +157,7 @@ main(List<String> args) async {
         }
       }
     }
-  },
-      onError: ((error, chain) {
+  }, onError: ((error, chain) {
     print(error);
     print(chain.terse);
     exitCode = 1;

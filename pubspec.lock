@@ -49,6 +49,10 @@ packages:
     description: csslib
     source: hosted
     version: "0.12.2"
+  frappe:
+    description: frappe
+    source: hosted
+    version: "0.4.0+6"
   glob:
     description: glob
     source: hosted
@@ -161,6 +165,10 @@ packages:
     description: stack_trace
     source: hosted
     version: "1.5.0"
+  stream_transformers:
+    description: stream_transformers
+    source: hosted
+    version: "0.3.0+3"
   string_scanner:
     description: string_scanner
     source: hosted
@@ -173,6 +181,10 @@ packages:
     description: test
     source: hosted
     version: "0.12.5+1"
+  tasks:
+    description: tasks
+    source: hosted
+    version: "0.1.0"
   tuneup:
     description: tuneup
     source: hosted

@@ -7,11 +7,11 @@ import 'dart:io';
 import 'package:dartdocorg/config.dart';
 import 'package:dartdocorg/generators/index_generator.dart';
 import 'package:dartdocorg/package.dart';
-import 'package:dartdocorg/utils.dart';
 import 'package:dartdocorg/utils/retry.dart';
 import 'package:http/http.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
+import 'package:tasks/utils.dart';
 
 final _logger = new Logger("cdn_cleaner");
 
@@ -48,15 +48,14 @@ class CdnCleaner {
 
   Future<Null> _purgeFiles(Iterable<String> relativePaths) async {
     // https://api.cloudflare.com/#zone-purge-individual-files-by-url-and-cache-tags
-    var groupedRelativePaths =
-        inGroupsOf(relativePaths, 30); // 30 is max, API limit
-    await Future.wait(groupedRelativePaths.map((pathsAndNulls) async {
+    // 30 is max, API limit
+    await pmap(relativePaths, (pathsAndNulls) async {
       var paths = pathsAndNulls.where((path) => path != null);
       var files = paths
           .map((f) => f == "" ? config.hostedUrl : "${config.hostedUrl}/$f")
           .toList();
       return _purgeCache({"files": files});
-    }));
+    }, concurrencyCount: 30);
   }
 
   Future<Null> _purgeCache(Map<String, Object> payload) async {

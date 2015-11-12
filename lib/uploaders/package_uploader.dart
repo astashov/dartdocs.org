@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:dartdocorg/config.dart';
 import 'package:dartdocorg/package.dart';
 import 'package:dartdocorg/storage.dart';
-import 'package:dartdocorg/utils.dart';
+import 'package:tasks/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
@@ -48,16 +48,13 @@ class PackageUploader {
       var entities = await new Directory(package.outputDir(config))
           .list(recursive: true)
           .toList();
-      var groups = inGroupsOf(entities.where((e) => e is File), 20);
-      for (Iterable group in groups) {
-        await Future.wait(group.map((entity) {
-          var relative =
-              entity.path.replaceFirst("${package.outputDir(config)}/", "");
-          var path = p.join(config.gcsPrefix, package.name,
-              package.version.toString(), relative);
-          return storage.insertFile(path, entity);
-        }));
-      }
+      await pmap(entities.where((e) => e is File), (entity) {
+        var relative =
+            entity.path.replaceFirst("${package.outputDir(config)}/", "");
+        var path = p.join(config.gcsPrefix, package.name,
+            package.version.toString(), relative);
+        return storage.insertFile(path, entity);
+      }, concurrencyCount: 20);
     }
   }
 
