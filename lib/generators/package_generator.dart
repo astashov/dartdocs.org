@@ -10,6 +10,7 @@ import 'package:dartdocorg/utils.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
 import 'package:stack_trace/stack_trace.dart';
+import 'package:tasks/utils.dart';
 
 final Logger _logger = new Logger("package_generator");
 
@@ -22,38 +23,34 @@ class PackageGenerator {
   }
 
   Future<Set<Package>> generate(Iterable<Package> allPackages) async {
-    var groupedPackages = inGroupsOf(allPackages, 4);
     var erroredPackages = new Set();
-    for (var packages in groupedPackages) {
-      var futures = packages.map((Package package) async {
-        List<LogRecord> logs = [];
-        try {
-          await _runCommand(logs, "pub", ["--version"]);
-          await _install(logs, package);
-          //await _runCommand(logs, "pub", ["global", "run", "dartdoc",
-          await _runCommand(logs, "dartdoc", [
-            "--input=${package.pubCacheDir(config)}",
-            "--output=${package.outputDir(config)}",
-            "--hosted-url=${config.hostedUrl}",
-            "--rel-canonical-prefix=${package.canonicalUrl(config)}",
-            "--header=${path.join(config.dirroot, "resources", "redirector.html")}",
-            "--footer=${path.join(config.dirroot, "resources", "google_analytics.html")}",
-            "--dart-sdk=${config.dartSdkPath}"
-          ]);
-          await _archivePackage(logs, package);
-        } on RunCommandError catch (e, s) {
-          _addLog(logs, Level.WARNING, "Got RunCommandError exception\n${e}");
-          erroredPackages.add(package);
-        } catch (e, s) {
-          var chain = new Chain.forTrace(s).terse;
-          _addLog(logs, Level.WARNING, "EXCEPTION:\n$e\nSTACK:\n$chain");
-          erroredPackages.add(package);
-        } finally {
-          await _saveLogsToFile(logs, package);
-        }
-      });
-      await Future.wait(futures);
-    }
+    await pmap(allPackages, (package) async {
+      List<LogRecord> logs = [];
+      try {
+        await _runCommand(logs, "pub", ["--version"]);
+        await _install(logs, package);
+        //await _runCommand(logs, "pub", ["global", "run", "dartdoc",
+        await _runCommand(logs, "dartdoc", [
+          "--input=${package.pubCacheDir(config)}",
+          "--output=${package.outputDir(config)}",
+          "--hosted-url=${config.hostedUrl}",
+          "--rel-canonical-prefix=${package.canonicalUrl(config)}",
+          "--header=${path.join(config.dirroot, "resources", "redirector.html")}",
+          "--footer=${path.join(config.dirroot, "resources", "google_analytics.html")}",
+          "--dart-sdk=${config.dartSdkPath}"
+        ]);
+        await _archivePackage(logs, package);
+      } on RunCommandError catch (e, _) {
+        _addLog(logs, Level.WARNING, "Got RunCommandError exception\n${e}");
+        erroredPackages.add(package);
+      } catch (e, s) {
+        var chain = new Chain.forTrace(s).terse;
+        _addLog(logs, Level.WARNING, "EXCEPTION:\n$e\nSTACK:\n$chain");
+        erroredPackages.add(package);
+      } finally {
+        await _saveLogsToFile(logs, package);
+      }
+    }, concurrencyCount: 4);
     return erroredPackages;
   }
 
