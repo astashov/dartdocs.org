@@ -8,7 +8,7 @@ packages:
   analyzer:
     description: analyzer
     source: hosted
-    version: "0.26.2+1"
+    version: "0.26.3"
   ansicolor:
     description: ansicolor
     source: hosted
@@ -36,7 +36,7 @@ packages:
   collection:
     description: collection
     source: hosted
-    version: "1.1.3"
+    version: "1.2.0"
   convert:
     description: convert
     source: hosted
@@ -72,7 +72,7 @@ packages:
   grinder:
     description: grinder
     source: hosted
-    version: "0.8.0"
+    version: "0.8.0+1"
   html:
     description: html
     source: hosted
@@ -96,7 +96,7 @@ packages:
   linter:
     description: linter
     source: hosted
-    version: "0.1.4"
+    version: "0.1.7"
   logging:
     description: logging
     source: hosted
@@ -120,7 +120,7 @@ packages:
   path:
     description: path
     source: hosted
-    version: "1.3.6"
+    version: "1.3.7"
   petitparser:
     description: petitparser
     source: hosted
@@ -140,7 +140,7 @@ packages:
   shelf:
     description: shelf
     source: hosted
-    version: "0.6.4+1"
+    version: "0.6.4+2"
   shelf_static:
     description: shelf_static
     source: hosted
@@ -177,14 +177,14 @@ packages:
     description: supports_color
     source: hosted
     version: "0.1.1"
-  test:
-    description: test
-    source: hosted
-    version: "0.12.5+1"
   tasks:
     description: tasks
     source: hosted
     version: "0.1.0"
+  test:
+    description: test
+    source: hosted
+    version: "0.12.6"
   tuneup:
     description: tuneup
     source: hosted
