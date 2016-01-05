@@ -160,6 +160,6 @@ main(List<String> args) async {
   }, onError: ((error, chain) {
     print(error);
     print(chain.terse);
-    exitCode = 1;
+    exit(1);
   }));
 }

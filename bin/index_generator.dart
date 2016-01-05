@@ -95,6 +95,6 @@ main(List<String> args) async {
   } catch (error, stackTrace) {
     print(error);
     print(stackTrace);
-    exitCode = 1;
+    exit(1);
   }
 }
