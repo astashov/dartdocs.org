@@ -49,6 +49,9 @@ set mailserver smtp.gmail.com port 587
     username "dartdocsorg@gmail.com" password "blablahblah" using tlsv1
     with timeout 30 seconds
 
+check file log with path /dartdocorg/logs/package_generator_log.txt
+    if size < 10 B for 10 cycles then alert
+
 check system $HOST
     if memory usage > 95% then alert
 
