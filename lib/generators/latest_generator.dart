@@ -39,6 +39,8 @@ class LatestGenerator {
               meta.setAttribute("http-equiv", "refresh");
               meta.setAttribute("content", content);
               document.head.appendChild(meta);
+
+              document.location = latestUrl + hash;
             </script>
             </head>
           <body></body>
