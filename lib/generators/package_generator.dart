@@ -30,7 +30,7 @@ class PackageGenerator {
         await _runCommand(logs, "pub", ["--version"]);
         await _install(logs, package);
         //await _runCommand(logs, "pub", ["global", "run", "dartdoc",
-        await _runCommand(logs, "dartdoc", [
+        var options = [
           "--input=${package.pubCacheDir(config)}",
           "--output=${package.outputDir(config)}",
           "--hosted-url=${config.hostedUrl}",
@@ -38,7 +38,11 @@ class PackageGenerator {
           "--header=${path.join(config.dirroot, "resources", "redirector.html")}",
           "--footer=${path.join(config.dirroot, "resources", "google_analytics.html")}",
           "--dart-sdk=${config.dartSdkPath}"
-        ]);
+        ];
+        if (package.name == "angular2") {
+          options.add("--include=angular2.common,angular2.animate,angular2.instrumentation,angular2.platform.browser,angular2.router,angular2.router.testing,angular2.testing");
+        }
+        await _runCommand(logs, "dartdoc", options);
         await _archivePackage(logs, package);
       } on RunCommandError catch (e, _) {
         _addLog(logs, Level.WARNING, "Got RunCommandError exception\n${e}");
