@@ -52,13 +52,13 @@ set mailserver smtp.gmail.com port 587
 check system $HOST
     if memory usage > 95% then alert
 
-check file log with path /dartdocorg/logs/package_generator_log.txt
+check file package_generator_log with path /dartdocorg/logs/package_generator_log.txt
     if size < 10 B for 10 cycles then alert
 
-check file log with path /dartdocorg/logs/index_generator_log.txt
+check file index_generator_log with path /dartdocorg/logs/index_generator_log.txt
     if size < 10 B for 10 cycles then alert
 
-check process package_generator with pidfile /var/run/index_generator.pid
+check process package_generator with pidfile /var/run/package_generator.pid
     start = "/dartdocorg/package_generator_monit.sh start"
     stop = "/dartdocorg/package_generator_monit.sh stop"
 
@@ -68,7 +68,6 @@ check process index_generator with pidfile /var/run/index_generator.pid
 ' > /etc/monit/conf.d/index_generator
 
 chmod 700 /etc/monit/conf.d/index_generator
-chmod 700 /etc/monit/conf.d/package_generator
 
 echo '# rotate logs
 0 * * * * root /usr/sbin/logrotate /dartdocorg/logrotate.conf' > /etc/cron.d/logrotate

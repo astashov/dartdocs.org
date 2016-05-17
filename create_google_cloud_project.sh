@@ -15,9 +15,10 @@ dart bin/bump_docs_version.dart
 
 # Create templates and instance groups with index and package generators
 gcloud compute instance-templates create dartdocs-index-generator \
-    --boot-disk-size 10GB \
+    --boot-disk-size 30GB \
     --boot-disk-type pd-standard \
     --image ubuntu-14-04 \
+    --machine-type n1-standard-2 \
     --metadata-from-file startup-script=index_generator_boot.sh \
     --scopes datastore,storage-full,compute-ro
 
