@@ -15,7 +15,10 @@
 ///
 /// Name of the current instance - dartdocs-package-generators-m6nl. Then let's say after retrieving the total list of
 /// packages from pub and filtering out already processed ones, we ended up with the list of 100 packages. Then,
-/// this instance will take care of the packages from 25 to 50 (second quarter)
+/// this instance will take care of the packages from 25 to 50 (second quarter).
+///
+/// Notice, that there's always one package generator running not inside package-generators group, but inside index-generators,
+/// so we need to shift package-generators instances by one when calculating the shard.
 
 import 'dart:async';
 import 'dart:io';
@@ -35,8 +38,10 @@ Future<Shard> getShard(Config config) async {
   List<String> list = instances.toList()..sort();
   var hostname = Platform.localHostname;
   var index = list.indexOf(hostname);
-  if (index >= 0) {
-    return new Shard(index, list.length);
+  if (list.length > 0 && index < 0) {
+    return new Shard(0, list.length + 1);
+  } else if (index >= 0) {
+    return new Shard(index + 1, list.length + 1);
   } else {
     return new Shard(0, 1);
   }
