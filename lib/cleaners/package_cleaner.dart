@@ -14,7 +14,7 @@ class PackageCleaner {
   final Config config;
   PackageCleaner(this.config);
 
-  /// Deletes whole [config.outputDir] and installed packages in .pub-cache, which are not used by this app.
+  /// Deletes whole [config.outputDir]/[config.gcsPrefix] and installed packages in .pub-cache, which are not used by this app.
   ///
   /// Be careful when using that on your local machine - it will wipe out all the installed packages in .pub-cache!!!
   /// I decided to use this approach instead of deleting the packages after we generate them, because this is more
@@ -22,8 +22,8 @@ class PackageCleaner {
   /// run while generating the packages' docs
   void deleteSync() {
     _logger.info("Cleaning old output and pub cache");
-    if (new Directory(config.outputDir).existsSync()) {
-      new Directory(config.outputDir).deleteSync(recursive: true);
+    if (new Directory(p.join(config.outputDir, config.gcsPrefix)).existsSync()) {
+      new Directory(p.join(config.outputDir, config.gcsPrefix)).deleteSync(recursive: true);
     }
     var usedDirs =
         _usedByDartDocGeneratorPackages.map((p) => p.fullName).toSet();
