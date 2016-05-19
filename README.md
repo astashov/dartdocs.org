@@ -90,9 +90,13 @@ It uses:
 
 * Google Compute Engine - to run `bin/package_generator.dart` and `bin/index_generator.dart`. There are 2 instance
   groups where these scripts run - **dartdocs-package-generators** and **dartdocs-index-generators** accordingly.
-  **dartdocs-index-generators** is supposed to have only one running instance, which will rebuild the index pages.
-  **dartdocs-package-generators** can have any number of running instances, depending on the work load and how fast
-  you want to regenerate the documentation.
+  **dartdocs-index-generators** is supposed to have **only one running instance**, which will rebuild the index pages
+  (by running `bin/index_generator.dart`) **and** also will build documentation for the packages (by running
+  `bin/package_generator.dart`).
+  **dartdocs-package-generators** can have any number of running instances (even 0, since we still have one running
+  `bin/package_generator.dart` on the **dartdocs-index-generators** instance), depending on the work load and how fast
+  you want to regenerate the documentation. You can think about it as an auxiliary group, which helps you to scale
+  generation when needed, in case you e.g. need to regenerate documentation for all packages.
 
   Both have startup scripts, which are run on an instance launch. They install Dart, clone the repo, configure monit
   and log rotation, and finally start the `bin/` scripts. You can find templates for them in the files `package_generator_boot.sh`
@@ -129,28 +133,31 @@ $ gcloud preview datastore cleanup-indexes index.yaml
 * Regenerate the docs with the new version of dartdoc
 
 The instances install the latest dev SDK on boot, (check out the `{index,package}_generator_boot.sh` script).
-So, to upgrade to the new version of dartdoc, we need to restart the instances and scale them up.
+So, to upgrade to the new version of dartdoc, we need to restart the instances and scale **dartdocs-package-generators** up.
 We also need to run `bin/bump_docs_version.dart` to update `docsVersion` and purge the CDN cache for the package docs.
 
 So, you have to do:
 
 ```bash
+$ gcloud compute instance-groups managed resize dartdocs-index-generators --size 0 --zone us-central1-f
 $ gcloud compute instance-groups managed resize dartdocs-package-generators --size 0 --zone us-central1-f
 $ dart bin/bump_docs_version.dart
-$ gcloud compute instance-groups managed resize dartdocs-package-generators --size 11 --zone us-central1-f
+$ gcloud compute instance-groups managed resize dartdocs-index-generators --size 1 --zone us-central1-f
+$ gcloud compute instance-groups managed resize dartdocs-package-generators --size 40 --zone us-central1-f
 ... after its done ...
 $ dart bin/purge_cdn_cache.dart
 ```
 
-So, the command `gcloud compute instance-groups managed resize dartdocs-package-generators --size 11 --zone us-central1-f`
+So, the command `gcloud compute instance-groups managed resize dartdocs-package-generators --size 40 --zone us-central1-f`
 sets the number of instances in dartdocs-package-generators group according to the `--size` argument.
-By default, you only can launch 24 CPU units per google cloud project, so, by default we are limited with 11 instances.
+For now, you only can launch 100 CPU units in the google cloud project, so, limited with 50 instances.
 
-It takes ~20-24 hours to regenerate the whole pub with 11 instances.
+It takes ~6-8 hours to regenerate the whole pub with 40 instances in the `dartdocs-package-generators` group.
 
 It doesn't scale down automatically, you have to use the command
-`gcloud compute instance-groups managed resize dartdocs-package-generators --size 1 --zone us-central1-f`
-to scale it back to one instance once they are done with regenerating everything.
+`gcloud compute instance-groups managed resize dartdocs-package-generators --size 0 --zone us-central1-f`
+to scale it back to zero instances once they are done with regenerating everything (remember, you'll still have one
+instance in the **dartdocs-index-generators**, which also generates the documentation for the packages)
 
 * Regenerate just one specific package
 
