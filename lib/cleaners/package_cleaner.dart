@@ -31,7 +31,7 @@ class PackageCleaner {
         .listSync(recursive: false)
         .where((e) => e is Directory)
         .forEach((dir) {
-      if (!usedDirs.contains(p.basename(dir.path))) {
+      if (!usedDirs.contains(p.basename(dir.path)) && !dir.path.contains("crossdart")) {
         dir.deleteSync(recursive: true);
       }
     });
