@@ -7,6 +7,8 @@ import 'package:googleapis_auth/auth.dart';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart' as yaml;
 
+enum ConfigMode { DARTDOCS, CROSSDART }
+
 class Config {
   final String dirroot;
   final String dartSdkPath;
@@ -24,6 +26,9 @@ class Config {
   final String cloudflareZone;
   final int installTimeout;
   final ServiceAccountCredentials credentials;
+  final ConfigMode mode;
+  final bool shouldDeleteOldPackages;
+  final int numberOfConcurrentBuilds;
 
   factory Config.buildFromFiles(
       String dirroot, String configFile, String credentialsFile) {
@@ -51,7 +56,10 @@ class Config {
         cloudflareValues["email"],
         cloudflareValues["zone"],
         configValues["install_timeout"],
-        serviceAccountCredentials);
+        serviceAccountCredentials,
+        configValues["mode"] == "crossdart" ? ConfigMode.CROSSDART : ConfigMode.DARTDOCS,
+        configValues["should_delete_old_packages"],
+        configValues["number_of_concurrent_builds"]);
   }
 
   Config._(
@@ -70,5 +78,8 @@ class Config {
       this.cloudflareEmail,
       this.cloudflareZone,
       this.installTimeout,
-      this.credentials);
+      this.credentials,
+      this.mode,
+      this.shouldDeleteOldPackages,
+      this.numberOfConcurrentBuilds);
 }

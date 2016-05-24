@@ -34,14 +34,27 @@ final _logger = new Logger("shard");
 const _scopes = const [ComputeApi.ComputeReadonlyScope];
 
 Future<Shard> getShard(Config config) async {
-  var instances = await _retrieveInstanceGroupInstances(config);
-  List<String> list = instances.toList()..sort();
-  var hostname = Platform.localHostname;
-  var index = list.indexOf(hostname);
-  if (list.length > 0 && index < 0) {
-    return new Shard(0, list.length + 1);
-  } else if (index >= 0) {
-    return new Shard(index + 1, list.length + 1);
+  Set<String> instances;
+  try {
+    instances = await _retrieveInstanceGroupInstances(config);
+  } on DetailedApiRequestError catch (error, _) {
+    if (error.status == 404) {
+      _logger.warning("Missing the group '${config.gcGroupName}', falling back to just one shard");
+    } else {
+      rethrow;
+    }
+  }
+  if (instances != null) {
+    List<String> list = instances.toList()..sort();
+    var hostname = Platform.localHostname;
+    var index = list.indexOf(hostname);
+    if (list.length > 0 && index < 0) {
+      return new Shard(0, list.length + 1);
+    } else if (index >= 0) {
+      return new Shard(index + 1, list.length + 1);
+    } else {
+      return new Shard(0, 1);
+    }
   } else {
     return new Shard(0, 1);
   }

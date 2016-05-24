@@ -6,6 +6,7 @@ import 'package:dartdocorg/config.dart';
 import 'package:dartdocorg/utils.dart';
 import 'package:path/path.dart' as path;
 import 'package:pub_semver/pub_semver.dart';
+import 'dart:io';
 
 class Package implements Comparable<Package> {
   static const String logFileName = "log.txt";
@@ -20,6 +21,11 @@ class Package implements Comparable<Package> {
     return new Package.build(map["name"], map["version"]);
   }
 
+  factory Package.sdk(Config config) {
+    var version = new File(path.join(config.dartSdkPath, "version")).readAsStringSync().trim();
+    return new Package.build("sdk", version);
+  }
+
   factory Package.build(String name, String version, [DateTime updatedAt]) {
     return new Package(name, new Version.parse(version), updatedAt);
   }
@@ -27,6 +33,8 @@ class Package implements Comparable<Package> {
   String canonicalUrl(Config config) {
     return path.join(config.hostedUrl, config.gcsPrefix, name, "latest");
   }
+
+  bool get isSdk => name == "sdk";
 
   String get fullName => "$name-$version";
 
@@ -56,8 +64,12 @@ class Package implements Comparable<Package> {
   }
 
   String pubCacheDir(Config config) {
-    return path.join(
-        config.pubCacheDir, "hosted", "pub.dartlang.org", "$name-$version");
+    if (isSdk) {
+      return config.dartSdkPath;
+    } else {
+      return path.join(
+          config.pubCacheDir, "hosted", "pub.dartlang.org", "$name-$version");
+    }
   }
 
   String toJson() {

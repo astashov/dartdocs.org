@@ -1,6 +1,6 @@
 # Properties needed for development and testing
 # Copy to `config.yaml` locally and update as appropriate
-dart_sdk: /usr/local/Cellar/dart/1.12.1/libexec
+dart_sdk: /usr/local/Cellar/dart/1.14.0-dev.7.1/libexec
 pub_cache_dir: /Users/anton/.pub-cache
 output_dir: /Users/anton/dartdocs.org
 hosted_url: https://www.dartdocs.org
@@ -11,3 +11,6 @@ gc_zone: us-central1-f
 gc_group_name: dartdocs-package-generators
 bucket: www.dartdocs.org
 install_timeout: 120
+mode: dartdocs
+should_delete_old_packages: true
+number_of_concurrent_builds: 4

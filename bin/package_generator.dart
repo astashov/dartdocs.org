@@ -69,6 +69,7 @@ class _PackageGenerator {
 
   Future<Iterable<Package>> retrieveNextPackages() async {
     List<Package> allPackages = await pubRetriever.update();
+    allPackages.insert(0, new Package.sdk(config));
     await datastoreRetriever.update(docsVersion);
     var allDataStorePackages = datastoreRetriever.allPackages;
     allPackages.removeWhere((p) => allDataStorePackages.contains(p));
@@ -84,7 +85,13 @@ class _PackageGenerator {
     if (shouldDeleteOldPackages) {
       packageCleaner.deleteSync();
     }
-    var erroredPackages = await generator.generate(packages);
+
+    Set<Package> erroredPackages;
+    if (config.mode == ConfigMode.DARTDOCS) {
+      erroredPackages = await generator.generateDartdocsOrg(packages);
+    } else {
+      erroredPackages = await generator.generateCrossdartInfo(packages);
+    }
     var successfulPackages = packages.toSet()..removeAll(erroredPackages);
     await uploader.uploadSuccessfulPackages(successfulPackages);
     _logger.info("Marking successful packages in datastore");
@@ -150,7 +157,7 @@ main(List<String> args) async {
         var packages = await packageGenerator.retrieveNextPackages();
         if (packages.isNotEmpty) {
           await packageGenerator.handlePackages(packages,
-              shouldDeleteOldPackages: true);
+              shouldDeleteOldPackages: packageGenerator.config.shouldDeleteOldPackages);
         } else {
           _logger.info("Sleeping for 3 minutes...");
           await new Future.delayed(new Duration(minutes: 3));

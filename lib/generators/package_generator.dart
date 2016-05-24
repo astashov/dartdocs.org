@@ -22,16 +22,20 @@ class PackageGenerator {
     await _runCommand([], "pub", ["global", "activate", "dartdoc"]);
   }
 
-  Future<Set<Package>> generate(Iterable<Package> allPackages) async {
-    var erroredPackages = new Set();
-    await pmap(allPackages, (package) async {
+  Future<Null> activateCrossdart() async {
+    await _runCommand([], "pub", ["global", "activate", "crossdart"]);
+  }
+
+  Future<Set<Package>> generateDartdocsOrg(Iterable<Package> allPackages) async {
+    var erroredPackages = new Set<Package>();
+    await pmap(allPackages, (Package package) async {
       List<LogRecord> logs = [];
       try {
         await _runCommand(logs, "pub", ["--version"]);
-        await _install(logs, package);
-        //await _runCommand(logs, "pub", ["global", "run", "dartdoc",
+        if (!package.isSdk) {
+          await _install(logs, package);
+        }
         var options = [
-          "--input=${package.pubCacheDir(config)}",
           "--output=${package.outputDir(config)}",
           "--hosted-url=${config.hostedUrl}",
           "--rel-canonical-prefix=${package.canonicalUrl(config)}",
@@ -39,6 +43,11 @@ class PackageGenerator {
           "--footer=${path.join(config.dirroot, "resources", "google_analytics.html")}",
           "--dart-sdk=${config.dartSdkPath}"
         ];
+        if (package.isSdk) {
+          options.add("--sdk-docs");
+        } else {
+          options.add("--input=${package.pubCacheDir(config)}");
+        }
         if (package.name == "angular2") {
           options.add("--include=angular2.common,angular2.animate,angular2.instrumentation,angular2.platform.browser,angular2.router,angular2.router.testing,angular2.testing");
         }
@@ -55,6 +64,38 @@ class PackageGenerator {
         await _saveLogsToFile(logs, package);
       }
     }, concurrencyCount: 4);
+    return erroredPackages;
+  }
+
+  Future<Set<Package>> generateCrossdartInfo(Iterable<Package> allPackages) async {
+    var erroredPackages = new Set();
+    await pmap(allPackages, (Package package) async {
+      List<LogRecord> logs = [];
+      try {
+        await _runCommand(logs, "pub", ["--version"]);
+        if (!package.isSdk) {
+          await _install(logs, package);
+        }
+        var options = [
+          "--input=${package.pubCacheDir(config)}",
+          "--output=${package.outputDir(config)}",
+          "--hosted-url=${config.hostedUrl}",
+          "--url-prefix-path=${config.gcsPrefix}",
+          "--output-format=html",
+          "--dart-sdk=${config.dartSdkPath}"
+        ];
+        await _runCommand(logs, "pub", ["global", "run", "crossdart"]..addAll(options));
+      } on RunCommandError catch (e, _) {
+        _addLog(logs, Level.WARNING, "Got RunCommandError exception\n${e}");
+        erroredPackages.add(package);
+      } catch (e, s) {
+        var chain = new Chain.forTrace(s).terse;
+        _addLog(logs, Level.WARNING, "EXCEPTION:\n$e\nSTACK:\n$chain");
+        erroredPackages.add(package);
+      } finally {
+        await _saveLogsToFile(logs, package);
+      }
+    }, concurrencyCount: config.numberOfConcurrentBuilds);
     return erroredPackages;
   }
 
