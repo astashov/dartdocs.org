@@ -89,7 +89,7 @@ class IndexGenerator {
   }
 
   Future<Null> copyAssets() async {
-    var favicon = config.mode == ConfigMode.CROSSDART ? "favicon-crossdart.png" : "favicon-crossdart.png";
+    var favicon = config.mode == ConfigMode.CROSSDART ? "favicon-crossdart.png" : "favicon-dart.png";
     for (var data in [[favicon, "favicon.png"], "style.css"]) {
       String source;
       String target;
