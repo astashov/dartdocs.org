@@ -1,0 +1,49 @@
+.crossdart-body .title {
+  float: left;
+  font-size: 1.8em;
+  line-height: 2em;
+  margin-right: 0.8em;
+}
+
+.crossdart-body .navbar {
+  border-radius: 0;
+  border: 0;
+  background-color: #006141;
+}
+
+.crossdart-body .navbar,
+.crossdart-body .navbar-default .navbar-text,
+.crossdart-body .navbar a,
+.crossdart-body .navbar-default .navbar-nav > li > a {
+  color: white;
+}
+
+.crossdart-body .navbar-default .navbar-nav > .active > a {
+  background-color: #3CAD87;
+  color: #F4FFCE;
+}
+
+.dartdocs-body .title {
+  float: left;
+  font-size: 1.8em;
+  line-height: 2em;
+  margin-right: 0.8em;
+}
+
+.dartdocs-body .navbar {
+  border-radius: 0;
+  border: 0;
+  background-color: #006698;
+}
+
+.dartdocs-body .navbar,
+.dartdocs-body .navbar-default .navbar-text,
+.dartdocs-body .navbar a,
+.dartdocs-body .navbar-default .navbar-nav > li > a {
+  color: white;
+}
+
+.dartdocs-body .navbar-default .navbar-nav > .active > a {
+  background-color: #35B3F1;
+  color: #F4FFCE;
+}

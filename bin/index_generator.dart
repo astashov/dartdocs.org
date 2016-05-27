@@ -44,6 +44,7 @@ main(List<String> args) async {
     while (true) {
       _logger.info("Retrieving the list of generated packages from GCS");
       await datastoreRetriever.update();
+      await indexGenerator.copyAssets();
 
       var successPackages = datastoreRetriever.successPackages;
       _logger.info(

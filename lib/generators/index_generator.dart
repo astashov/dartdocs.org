@@ -10,6 +10,7 @@ import 'package:dartdocorg/utils.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
 import 'package:pub_semver/pub_semver.dart';
+import 'package:resource/resource.dart' as r;
 
 var _logger = new Logger("index_generator");
 
@@ -87,6 +88,24 @@ class IndexGenerator {
     await writeToFile(MenuItem.home.url, html.toString());
   }
 
+  Future<Null> copyAssets() async {
+    var favicon = config.mode == ConfigMode.CROSSDART ? "favicon-crossdart.png" : "favicon-crossdart.png";
+    for (var data in [[favicon, "favicon.png"], "style.css"]) {
+      String source;
+      String target;
+      if (data is Iterable) {
+        source = data[0];
+        target = data[1];
+      } else {
+        source = data;
+        target = data;
+      }
+      var resource = new r.Resource("package:dartdocorg/resources/${source}");
+      new Directory(path.join(config.outputDir, "assets")).createSync(recursive: true);
+      new File(path.join(config.outputDir, "assets", target)).writeAsBytesSync(await resource.readAsBytes());
+    }
+  }
+
   Future<Null> generateJsonIndex(Iterable<Package> packages) async {
     var finalMap = packages.fold({}, (Map memo, Package package) {
       if (memo[package.name] == null) {
@@ -146,22 +165,36 @@ class IndexGenerator {
         "</body></html>";
   }
 
+  String get _bodyClass => config.mode == ConfigMode.CROSSDART ? "crossdart-body" : "dartdocs-body";
+  String get _siteName => config.mode == ConfigMode.CROSSDART ? "Crossdart" : "Dart Docs";
+  String get _gitRepo => config.mode == ConfigMode.CROSSDART ? "astashov/crossdart" : "astashov/dartdocs.org";
+  String get _title {
+    if (config.mode == ConfigMode.CROSSDART) {
+      return "CrossDart - cross-referenced Dart's pub packages";
+    } else {
+      return "Dartdocs - Documentation for Dart packages";
+    }
+  }
+
   String _generateHeader([MenuItem activeItem]) {
     return """<html>
   <head>
-    <title>Dartdocs - Documentation for Dart packages</title>
+    <title>${_title}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/style.css">
+    <link rel='icon' href='/assets/favicon.png' />
   </head>
-  <body>
+  <body class="${_bodyClass}">
     <nav class="navbar navbar-default" role="navigation">
       <div class="container-fluid">
+        <div class="title">${_siteName}</div>
         <ul class="nav navbar-nav">
           ${MenuItem.all.map((mi) => mi.toHtml(mi == activeItem)).join("\n")}
         </ul>
         <p class="navbar-text pull-right">
-          <a href="https://github.com/astashov/dartdocs.org">Github</a> |
-          <a href="https://github.com/astashov/dartdocs.org/issues">Issues</a>
+          <a href="https://github.com/${_gitRepo}">Github</a> |
+          <a href="https://github.com/${_gitRepo}/issues">Issues</a>
         </p>
       </div>
     </nav>
@@ -188,4 +221,6 @@ class MenuItem {
 
 final Iterable<String> allIndexUrls = []
   ..addAll(MenuItem.all.map((mi) => mi.url))
-  ..add("index.json");
+  ..add("index.json")
+  ..add("assets/style.css")
+  ..add("assets/favicon.png");
