@@ -80,7 +80,7 @@ class PackageGenerator {
           "--input=${package.pubCacheDir(config)}",
           "--output=${package.outputDir(config)}",
           "--hosted-url=${config.hostedUrl}",
-          "--url-prefix-path=${config.gcsPrefix}",
+          "--url-path-prefix=${config.gcsPrefix}",
           "--output-format=html",
           "--dart-sdk=${config.dartSdkPath}"
         ];
