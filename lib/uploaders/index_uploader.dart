@@ -19,7 +19,7 @@ class IndexUploader {
   Future<Null> uploadIndexFiles() async {
     _logger.info("Uploading index files...");
     await storage.insertFile(
-        "404.html", new File(p.join(config.outputDir, "404.html")));
+        "404.html", new File(p.join(config.outputDir, "404.html")), maxAge: 0);
     await Future.wait(allIndexUrls.map((url) {
       return storage.insertFile(url, new File(p.join(config.outputDir, url)),
           maxAge: 60);
