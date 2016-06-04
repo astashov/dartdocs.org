@@ -168,6 +168,13 @@ class IndexGenerator {
   String get _bodyClass => config.mode == ConfigMode.CROSSDART ? "crossdart-body" : "dartdocs-body";
   String get _siteName => config.mode == ConfigMode.CROSSDART ? "Crossdart" : "Dart Docs";
   String get _gitRepo => config.mode == ConfigMode.CROSSDART ? "astashov/crossdart" : "astashov/dartdocs.org";
+  String get _crossdartChromeExtension {
+    if (config.mode == ConfigMode.CROSSDART) {
+      return "<a href=\"https://github.com/astashov/crossdart-chrome-extension\">Crossdart Chrome Extension for Github</a> |";
+    } else {
+      return "";
+    }
+  }
   String get _title {
     if (config.mode == ConfigMode.CROSSDART) {
       return "CrossDart - cross-referenced Dart's pub packages";
@@ -193,6 +200,7 @@ class IndexGenerator {
           ${MenuItem.all.map((mi) => mi.toHtml(mi == activeItem)).join("\n")}
         </ul>
         <p class="navbar-text pull-right">
+          ${_crossdartChromeExtension}
           <a href="https://github.com/${_gitRepo}">Github</a> |
           <a href="https://github.com/${_gitRepo}/issues">Issues</a>
         </p>
