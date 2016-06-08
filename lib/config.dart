@@ -16,10 +16,12 @@ class Config {
   final String pubCacheDir;
   final String outputDir;
   final String hostedUrl;
+  final String crossdartHostedUrl;
   final String gcProjectName;
   final String gcZone;
   final String gcGroupName;
   final String gcsPrefix;
+  final String crossdartGcsPrefix;
   final String gcsMeta;
   final String cloudflareApiKey;
   final String cloudflareEmail;
@@ -59,7 +61,9 @@ class Config {
         serviceAccountCredentials,
         configValues["mode"] == "crossdart" ? ConfigMode.CROSSDART : ConfigMode.DARTDOCS,
         configValues["should_delete_old_packages"],
-        configValues["number_of_concurrent_builds"]);
+        configValues["number_of_concurrent_builds"],
+        configValues["crossdart_hosted_url"],
+        configValues["crossdart_gcs_prefix"]);
   }
 
   Config._(
@@ -81,5 +85,7 @@ class Config {
       this.credentials,
       this.mode,
       this.shouldDeleteOldPackages,
-      this.numberOfConcurrentBuilds);
+      this.numberOfConcurrentBuilds,
+      this.crossdartHostedUrl,
+      this.crossdartGcsPrefix);
 }

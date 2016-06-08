@@ -36,12 +36,23 @@ class PackageGenerator {
           await _install(logs, package);
         }
         var options = [
+          "--input=${package.pubCacheDir(config)}",
+          "--output=${package.pubCacheDir(config)}",
+          "--hosted-url=${config.crossdartHostedUrl}",
+          "--url-path-prefix=${config.crossdartGcsPrefix}",
+          "--output-format=json",
+          "--dart-sdk=${config.dartSdkPath}"
+        ];
+        await _runCommand(logs, "pub", ["global", "run", "crossdart"]..addAll(options));
+
+        options = [
           "--output=${package.outputDir(config)}",
           "--hosted-url=${config.hostedUrl}",
           "--rel-canonical-prefix=${package.canonicalUrl(config)}",
           "--header=${path.join(config.dirroot, "resources", "redirector.html")}",
           "--footer=${path.join(config.dirroot, "resources", "google_analytics.html")}",
-          "--dart-sdk=${config.dartSdkPath}"
+          "--dart-sdk=${config.dartSdkPath}",
+          "--add-crossdart"
         ];
         if (package.isSdk) {
           options.add("--sdk-docs");
@@ -51,7 +62,7 @@ class PackageGenerator {
         if (package.name == "angular2") {
           options.add("--include=angular2.common,angular2.animate,angular2.instrumentation,angular2.platform.browser,angular2.router,angular2.router.testing,angular2.testing");
         }
-        await _runCommand(logs, "dartdoc", options);
+        await _runCommand(logs, "pub", ["global", "run", "dartdoc"]..addAll(options));
         await _archivePackage(logs, package);
       } on RunCommandError catch (e, _) {
         _addLog(logs, Level.WARNING, "Got RunCommandError exception\n${e}");
