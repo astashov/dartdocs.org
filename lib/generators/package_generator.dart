@@ -43,7 +43,12 @@ class PackageGenerator {
           "--output-format=json",
           "--dart-sdk=${config.dartSdkPath}"
         ];
-        await _runCommand(logs, "pub", ["global", "run", "crossdart"]..addAll(options));
+        try {
+          await _runCommand(logs, "pub", ["global", "run", "crossdart"]..addAll(options));
+        } on RunCommandError catch (e, _) {
+          _addLog(logs, Level.SEVERE, e.stdout);
+          _addLog(logs, Level.SEVERE, e.stderr);
+        }
 
         options = [
           "--output=${package.outputDir(config)}",
