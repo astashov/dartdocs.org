@@ -45,14 +45,16 @@ class PackageCleaner {
       var line = result.stdout.split("\n").firstWhere((String l) => l.startsWith("crossdart"));
       var version = line.split(" ")[1];
       for (var dir in ["/dartdoc", p.join(config.pubCacheDir, "hosted", "pub.dartlang.org", "crossdart-${version}"), config.dirroot]) {
-        var pubspecLock = new File(p.join(dir, "pubspec.lock"));
-        if (!pubspecLock.existsSync()) {
-          Process.runSync("pub", ["get"], workingDirectory: dir);
+        if (new Directory(dir).existsSync()) {
+          var pubspecLock = new File(p.join(dir, "pubspec.lock"));
+          if (!pubspecLock.existsSync()) {
+            Process.runSync("pub", ["get"], workingDirectory: dir);
+          }
+          Map<String, Map<String, String>> lockfile = yaml.loadYaml(pubspecLock.readAsStringSync())["packages"];
+          lockfile.forEach((String key, Map<String, String> values) {
+            packages.add(new Package.build(key, values["version"]));
+          });
         }
-        Map<String, Map<String, String>> lockfile = yaml.loadYaml(pubspecLock.readAsStringSync())["packages"];
-        lockfile.forEach((String key, Map<String, String> values) {
-          packages.add(new Package.build(key, values["version"]));
-        });
       }
       _usedByDartDocGeneratorPackagesMemoizer = packages;
     }
