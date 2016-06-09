@@ -61,6 +61,7 @@ class PackageGenerator {
         ];
         if (package.isSdk) {
           options.add("--sdk-docs");
+          options.add("--input=${config.dartSdkPath}");
         } else {
           options.add("--input=${package.pubCacheDir(config)}");
         }
