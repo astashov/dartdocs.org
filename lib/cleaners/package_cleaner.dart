@@ -40,13 +40,20 @@ class PackageCleaner {
   Set<Package> _usedByDartDocGeneratorPackagesMemoizer;
   Set<Package> get _usedByDartDocGeneratorPackages {
     if (_usedByDartDocGeneratorPackagesMemoizer == null) {
-      Map<String, Map<String, String>> lockfile = yaml.loadYaml(
-          new File(p.join(config.dirroot, "pubspec.lock"))
-              .readAsStringSync())["packages"];
       var packages = new Set();
-      lockfile.forEach((String key, Map<String, String> values) {
-        packages.add(new Package.build(key, values["version"]));
-      });
+      var result = Process.runSync("pub", ["global", "list"]);
+      var line = result.stdout.split("\n").firstWhere((String l) => l.startsWith("crossdart"));
+      var version = line.split(" ")[1];
+      for (var dir in ["/dartdoc", p.join(config.pubCacheDir, "hosted", "pub.dartlang.org", "crossdart-${version}"), config.dirroot]) {
+        var pubspecLock = new File(p.join(dir, "pubspec.lock"));
+        if (!pubspecLock.existsSync()) {
+          Process.runSync("pub", ["get"], workingDirectory: dir);
+        }
+        Map<String, Map<String, String>> lockfile = yaml.loadYaml(pubspecLock.readAsStringSync())["packages"];
+        lockfile.forEach((String key, Map<String, String> values) {
+          packages.add(new Package.build(key, values["version"]));
+        });
+      }
       _usedByDartDocGeneratorPackagesMemoizer = packages;
     }
     return _usedByDartDocGeneratorPackagesMemoizer;
