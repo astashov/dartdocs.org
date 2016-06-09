@@ -79,7 +79,7 @@ class PackageGenerator {
       } finally {
         await _saveLogsToFile(logs, package);
       }
-    }, concurrencyCount: 4);
+    }, concurrencyCount: config.numberOfConcurrentBuilds);
     return erroredPackages;
   }
 
