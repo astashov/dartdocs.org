@@ -153,16 +153,10 @@ class IndexGenerator {
   }
 
   String _generateFooter() {
-    return "</div>"
-        """<script>
-          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-          ga('create', 'UA-51687523-1', 'auto');
-          ga('send', 'pageview');
-        </script>"""
-        "</body></html>";
+    var suffix = config.mode == ConfigMode.CROSSDART ? "crossdart" : "dartdocs";
+    return "</div>" +
+      new File(path.join(config.dirroot, "resources", "google_analytics_${suffix}.html")).readAsStringSync() +
+      "</body></html>";
   }
 
   String get _bodyClass => config.mode == ConfigMode.CROSSDART ? "crossdart-body" : "dartdocs-body";
