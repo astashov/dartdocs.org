@@ -77,4 +77,7 @@ chmod 700 /etc/monit/conf.d/package_generator
 echo '# rotate logs
 0 * * * * root /usr/sbin/logrotate /dartdocorg/logrotate.conf' > /etc/cron.d/logrotate
 
+echo '# update flutter
+0 0 * * * root /dartdocorg/update_flutter.sh' > /etc/cron.d/flutter
+
 monit reload
