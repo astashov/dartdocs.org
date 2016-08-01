@@ -68,7 +68,7 @@ class PackageGenerator {
         if (package.name == "angular2") {
           options.add("--include=angular2.common,angular2.animate,angular2.instrumentation,angular2.platform.browser,angular2.router,angular2.router.testing,angular2.testing");
         }
-        await _runCommand(logs, "pub", ["global", "run", "dartdoc"]..addAll(options));
+        await _runCommand(logs, "dartdoc", options);
         await _archivePackage(logs, package);
       } on RunCommandError catch (e, _) {
         _addLog(logs, Level.WARNING, "Got RunCommandError exception\n${e}");
