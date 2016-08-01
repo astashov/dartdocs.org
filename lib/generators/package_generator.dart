@@ -32,7 +32,7 @@ class PackageGenerator {
       List<LogRecord> logs = [];
       try {
         await _runCommand(logs, "pub", ["--version"]);
-        if (!package.isSdk) {
+        if (!package.isSdk && !package.isFlutter) {
           await _install(logs, package);
         }
         var options = [
@@ -90,7 +90,7 @@ class PackageGenerator {
       List<LogRecord> logs = [];
       try {
         await _runCommand(logs, "pub", ["--version"]);
-        if (!package.isSdk) {
+        if (!package.isSdk && !package.isFlutter) {
           await _install(logs, package);
         }
         var options = [

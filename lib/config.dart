@@ -12,6 +12,7 @@ enum ConfigMode { DARTDOCS, CROSSDART }
 class Config {
   final String dirroot;
   final String dartSdkPath;
+  final String flutterDir;
   final String bucket;
   final String pubCacheDir;
   final String outputDir;
@@ -45,6 +46,7 @@ class Config {
     return new Config._(
         dirroot,
         configValues["dart_sdk"],
+        configValues["flutter_dir"],
         configValues["bucket"],
         configValues["pub_cache_dir"],
         configValues["output_dir"],
@@ -69,6 +71,7 @@ class Config {
   Config._(
       this.dirroot,
       this.dartSdkPath,
+      this.flutterDir,
       this.bucket,
       this.pubCacheDir,
       this.outputDir,

@@ -7,6 +7,17 @@ import 'package:dartdocorg/utils.dart';
 import 'package:path/path.dart' as path;
 import 'package:pub_semver/pub_semver.dart';
 import 'dart:io';
+import "package:yaml/yaml.dart" as yaml;
+
+const flutterPackageNames = const [
+  "flutter",
+  "flutter_driver",
+  "flutter_markdown",
+  "flutter_sprites",
+  "flutter_test",
+  "flutter_tools",
+  "playfair"
+];
 
 class Package implements Comparable<Package> {
   static const String logFileName = "log.txt";
@@ -26,6 +37,12 @@ class Package implements Comparable<Package> {
     return new Package.build("sdk", version);
   }
 
+  factory Package.flutter(String packageName, Config config) {
+    var pubspec = new File(path.join(config.flutterDir, "packages", packageName, "pubspec.yaml"));
+    String version = yaml.loadYaml(pubspec.readAsStringSync().trim())["version"];
+    return new Package.build(packageName, version ?? "0.0.1");
+  }
+
   factory Package.build(String name, String version, [DateTime updatedAt]) {
     return new Package(name, new Version.parse(version), updatedAt);
   }
@@ -35,6 +52,8 @@ class Package implements Comparable<Package> {
   }
 
   bool get isSdk => name == "sdk";
+
+  bool get isFlutter => flutterPackageNames.contains(name);
 
   String get fullName => "$name-$version";
 
@@ -66,6 +85,8 @@ class Package implements Comparable<Package> {
   String pubCacheDir(Config config) {
     if (isSdk) {
       return config.dartSdkPath;
+    } else if (isFlutter) {
+      return path.join(config.flutterDir, "packages", name);
     } else {
       return path.join(
           config.pubCacheDir, "hosted", "pub.dartlang.org", "$name-$version");

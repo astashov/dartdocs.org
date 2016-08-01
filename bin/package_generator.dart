@@ -69,6 +69,9 @@ class _PackageGenerator {
 
   Future<Iterable<Package>> retrieveNextPackages() async {
     List<Package> allPackages = await pubRetriever.update();
+    for (var name in flutterPackageNames) {
+      allPackages.insert(0, new Package.flutter(name, config));
+    }
     allPackages.insert(0, new Package.sdk(config));
     await datastoreRetriever.update(docsVersion);
     var allDataStorePackages = datastoreRetriever.allPackages;
