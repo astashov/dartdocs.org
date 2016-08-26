@@ -6,16 +6,13 @@ import 'package:dartdocorg/config.dart';
 import 'package:dartdocorg/package.dart';
 import 'package:dartdocorg/utils/retry.dart';
 import 'package:googleapis_auth/auth_io.dart';
-import 'package:googleapis_beta/datastore/v1beta2.dart';
+import 'package:googleapis/datastore/v1.dart';
 import 'package:logging/logging.dart';
 
 final Logger _logger = new Logger("datastore");
 
 class Datastore {
-  static const _scopes = const [
-    DatastoreApi.DatastoreScope,
-    DatastoreApi.UserinfoEmailScope
-  ];
+  static const _scopes = const [DatastoreApi.DatastoreScope];
 
   final Config config;
 
@@ -36,7 +33,7 @@ class Datastore {
   Future<int> docsVersion() async {
     DatastoreApi api = (await _datastoreApi);
     LookupResponse result = await retry(() {
-      return api.datasets.lookup(
+      return api.projects.lookup(
           new LookupRequest.fromJson({
             "keys": [
               {
@@ -95,9 +92,9 @@ class Datastore {
   Future<CommitResponse> _upsert(List<Map> maps) async {
     DatastoreApi api = (await _datastoreApi);
     return retry(() async {
-      var transaction = (await (api.datasets.beginTransaction(
+      var transaction = (await (api.projects.beginTransaction(
           new BeginTransactionRequest(), config.gcProjectName))).transaction;
-      return api.datasets.commit(
+      return api.projects.commit(
           new CommitRequest.fromJson({
             "transaction": transaction,
             "mutation": {"upsert": maps}
@@ -114,7 +111,7 @@ class Datastore {
       filters.add({
         "propertyFilter": {
           "property": {"name": "docsVersion"},
-          "operator": 'EQUAL',
+          "op": 'EQUAL',
           "value": {"integerValue": docsVersion.toString()}
         }
       });
@@ -123,7 +120,7 @@ class Datastore {
       filters.add({
         "propertyFilter": {
           "property": {"name": "status"},
-          "operator": 'EQUAL',
+          "op": 'EQUAL',
           "value": {"stringValue": status}
         }
       });
@@ -132,32 +129,39 @@ class Datastore {
       filters.add({
         "propertyFilter": {
           "property": {"name": "updatedAt"},
-          "operator": 'GREATER_THAN_OR_EQUAL',
-          "value": {"dateTimeValue": updatedAt.toUtc().toIso8601String()}
+          "op": 'GREATER_THAN_OR_EQUAL',
+          "value": {"timestampValue": updatedAt.toUtc().toIso8601String()}
         }
       });
     }
 
-    var result = await retry(() {
-      return api.datasets.runQuery(
-          new RunQueryRequest.fromJson({
-            "query": {
-              "kinds": [
-                {"name": 'Package'}
-              ],
-              "filter": {
-                "compositeFilter": {"operator": "AND", "filters": filters}
+    var shouldContinue = true;
+    var packages = [];
+    var cursor = "";
+    while (shouldContinue) {
+      var result = await retry(() {
+        return api.projects.runQuery(
+            new RunQueryRequest.fromJson({
+              "query": {
+                "startCursor": cursor,
+                "kind": [{"name": "Package"}],
+                "filter": {
+                  "compositeFilter": {"op": "AND", "filters": filters}
+                }
               }
-            }
-          }),
-          config.gcProjectName);
-    });
-    return result.batch.entityResults.map((er) {
-      var entity = er.entity;
-      return new Package.build(
-          entity.properties["packageName"].stringValue,
-          entity.properties["packageVersion"].stringValue,
-          entity.properties["updatedAt"].dateTimeValue);
-    });
+            }),
+            config.gcProjectName);
+      });
+      packages.addAll((result.batch.entityResults ?? []).map((er) {
+        var entity = er.entity;
+        return new Package.build(
+            entity.properties["packageName"].stringValue,
+            entity.properties["packageVersion"].stringValue,
+            entity.properties["updatedAt"].timestampValue);
+      }));
+      cursor = result.batch.endCursor;
+      shouldContinue = result.batch.moreResults == "NOT_FINISHED";
+    }
+    return packages;
   }
 }
