@@ -83,7 +83,7 @@ class Datastore {
           "packageVersion": {"stringValue": package.version.toString()},
           "status": {"stringValue": status ?? "success", "indexed": true},
           "docsVersion": {"integerValue": docsVersion.toString()},
-          "updatedAt": {"dateTimeValue": updatedAt}
+          "updatedAt": {"timestampValue": updatedAt}
         }
       }
     ]);
@@ -97,7 +97,7 @@ class Datastore {
       return api.projects.commit(
           new CommitRequest.fromJson({
             "transaction": transaction,
-            "mutation": {"upsert": maps}
+            "mutations": maps.map((map) => {"upsert": map})
           }),
           config.gcProjectName);
     });
