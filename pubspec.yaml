@@ -3,21 +3,21 @@ description: Generates the Dart documentation for all the packages in pub
 environment:
   sdk: '>=1.12.0 <2.0.0'
 dependencies:
-  args: ^0.13.2
-  googleapis_auth: ^0.2.3+1
+  args: ^0.13.5
+  googleapis_auth: ^0.2.3
   googleapis_beta: ^0.30.1
   googleapis: ^0.31.0
-  http: ^0.11.3+2
-  intl: ^0.12.4+2
-  logging: ^0.11.2
-  path: ^1.3.6
-  pub_semver: ^1.2.3
-  stack_trace: ^1.5.0
-  yaml: ^2.1.7
+  http: ^0.11.3
+  intl: ^0.13.0
+  logging: ^0.11.3
+  path: ^1.3.9
+  pub_semver: ^1.3.0
+  stack_trace: ^1.6.6
+  yaml: ^2.1.10
   tasks: ^0.1.0
   resource: ^1.1.0
 dev_dependencies:
   grinder: ^0.8.0
-  linter: ^0.1.4
-  test: ^0.12.5+1
-  tuneup: ^0.1.3+1
+  linter: any
+  test: ^0.12.15
+  tuneup: ^0.2.4
