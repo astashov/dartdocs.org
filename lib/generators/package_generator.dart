@@ -31,45 +31,49 @@ class PackageGenerator {
     await pmap(allPackages, (Package package) async {
       List<LogRecord> logs = [];
       try {
-        await _runCommand(logs, "pub", ["--version"]);
-        if (!package.isSdk && !package.isFlutter) {
-          await _install(logs, package);
-        }
-        var options = [
-          "--input=${package.pubCacheDir(config)}",
-          "--output=${package.pubCacheDir(config)}",
-          "--hosted-url=${config.crossdartHostedUrl}",
-          "--url-path-prefix=${config.crossdartGcsPrefix}",
-          "--output-format=json",
-          "--dart-sdk=${config.dartSdkPath}"
-        ];
-        try {
-          await _runCommand(logs, "pub", ["global", "run", "crossdart"]..addAll(options));
-        } on RunCommandError catch (e, _) {
-          _addLog(logs, Level.SEVERE, e.stdout);
-          _addLog(logs, Level.SEVERE, e.stderr);
-        }
-
-        options = [
-          "--output=${package.outputDir(config)}",
-          "--hosted-url=${config.hostedUrl}",
-          "--rel-canonical-prefix=${package.canonicalUrl(config)}",
-          "--header=${path.join(config.dirroot, "resources", "redirector.html")}",
-          "--footer=${path.join(config.dirroot, "resources", "google_analytics_dartdocs.html")}",
-          "--dart-sdk=${config.dartSdkPath}",
-          "--add-crossdart"
-        ];
-        if (package.isSdk) {
-          options.add("--sdk-docs");
-          options.add("--input=${config.dartSdkPath}");
-        } else {
-          options.add("--input=${package.pubCacheDir(config)}");
-        }
         if (package.name == "angular2") {
-          options.add("--include=angular2.common,angular2.animate,angular2.instrumentation,angular2.platform.browser,angular2.router,angular2.router.testing,angular2.testing");
+          var file = new File(path.join(config.dirroot, "resources", "angular2.html"));
+          var dir = package.outputDir(config);
+          new Directory(dir).createSync(recursive: true);
+          file.copySync(path.join(dir, "index.html"));
+        } else {
+          await _runCommand(logs, "pub", ["--version"]);
+          if (!package.isSdk && !package.isFlutter) {
+            await _install(logs, package);
+          }
+          var options = [
+            "--input=${package.pubCacheDir(config)}",
+            "--output=${package.pubCacheDir(config)}",
+            "--hosted-url=${config.crossdartHostedUrl}",
+            "--url-path-prefix=${config.crossdartGcsPrefix}",
+            "--output-format=json",
+            "--dart-sdk=${config.dartSdkPath}"
+          ];
+          try {
+            await _runCommand(logs, "pub", ["global", "run", "crossdart"]..addAll(options));
+          } on RunCommandError catch (e, _) {
+            _addLog(logs, Level.SEVERE, e.stdout);
+            _addLog(logs, Level.SEVERE, e.stderr);
+          }
+
+          options = [
+            "--output=${package.outputDir(config)}",
+            "--hosted-url=${config.hostedUrl}",
+            "--rel-canonical-prefix=${package.canonicalUrl(config)}",
+            "--header=${path.join(config.dirroot, "resources", "redirector.html")}",
+            "--footer=${path.join(config.dirroot, "resources", "google_analytics_dartdocs.html")}",
+            "--dart-sdk=${config.dartSdkPath}",
+            "--add-crossdart"
+          ];
+          if (package.isSdk) {
+            options.add("--sdk-docs");
+            options.add("--input=${config.dartSdkPath}");
+          } else {
+            options.add("--input=${package.pubCacheDir(config)}");
+          }
+          await _runCommand(logs, "dartdoc", options);
+          await _archivePackage(logs, package);
         }
-        await _runCommand(logs, "dartdoc", options);
-        await _archivePackage(logs, package);
       } on RunCommandError catch (e, _) {
         _addLog(logs, Level.WARNING, "Got RunCommandError exception\n${e}");
         erroredPackages.add(package);
