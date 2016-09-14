@@ -15,8 +15,7 @@ const flutterPackageNames = const [
   "flutter_markdown",
   "flutter_sprites",
   "flutter_test",
-  "flutter_tools",
-  "playfair"
+  "flutter_tools"
 ];
 
 class Package implements Comparable<Package> {
