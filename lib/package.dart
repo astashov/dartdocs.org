@@ -13,7 +13,6 @@ const flutterPackageNames = const [
   "flutter",
   "flutter_driver",
   "flutter_markdown",
-  "flutter_sprites",
   "flutter_test",
   "flutter_tools"
 ];
