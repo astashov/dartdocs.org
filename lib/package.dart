@@ -22,8 +22,11 @@ class Package implements Comparable<Package> {
   final String name;
   final Version version;
   final DateTime updatedAt;
+  final String hashVersion;
 
-  Package(this.name, this.version, [this.updatedAt]);
+  Package(this.name, Version version, [this.updatedAt, String hashVersion]) :
+      this.version = version,
+      this.hashVersion = hashVersion ?? version.toString();
 
   factory Package.fromJson(String json) {
     final map = JSON.decode(json);
@@ -38,11 +41,13 @@ class Package implements Comparable<Package> {
   factory Package.flutter(String packageName, Config config) {
     var pubspec = new File(path.join(config.flutterDir, "packages", packageName, "pubspec.yaml"));
     String version = yaml.loadYaml(pubspec.readAsStringSync().trim())["version"];
-    return new Package.build(packageName, version ?? "0.0.1");
+    var dir = path.join(config.flutterDir, "packages", packageName);
+    String hashVersion = Process.runSync("git", ["-C", dir, "rev-parse", "HEAD"]).stdout.toString().trim();
+    return new Package.build(packageName, version ?? "0.0.1", null, hashVersion);
   }
 
-  factory Package.build(String name, String version, [DateTime updatedAt]) {
-    return new Package(name, new Version.parse(version), updatedAt);
+  factory Package.build(String name, String version, [DateTime updatedAt, String hashVersion]) {
+    return new Package(name, new Version.parse(version), updatedAt, hashVersion);
   }
 
   String canonicalUrl(Config config) {
@@ -55,10 +60,10 @@ class Package implements Comparable<Package> {
 
   String get fullName => "$name-$version";
 
-  int get hashCode => hash([name, version]);
+  int get hashCode => hash([name, version, hashVersion]);
 
   bool operator ==(other) =>
-      other is Package && name == other.name && version == other.version;
+      other is Package && name == other.name && version == other.version && hashVersion == other.hashVersion;
 
   int compareTo(Package other) {
     if (name == other.name) {
@@ -99,6 +104,9 @@ class Package implements Comparable<Package> {
     var result = {"name": name, "version": version.toString()};
     if (updatedAt != null) {
       result["updatedAt"] = updatedAt;
+    }
+    if (hashVersion != null) {
+      result["hashVersion"] = hashVersion;
     }
     return result;
   }

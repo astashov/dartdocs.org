@@ -81,6 +81,7 @@ class Datastore {
         "properties": {
           "packageName": {"stringValue": package.name},
           "packageVersion": {"stringValue": package.version.toString()},
+          "packageHashVersion": {"stringValue": package.hashVersion},
           "status": {"stringValue": status ?? "success", "indexed": true},
           "docsVersion": {"integerValue": docsVersion.toString()},
           "updatedAt": {"timestampValue": updatedAt}
@@ -157,7 +158,10 @@ class Datastore {
         return new Package.build(
             entity.properties["packageName"].stringValue,
             entity.properties["packageVersion"].stringValue,
-            entity.properties["updatedAt"].timestampValue);
+            entity.properties["updatedAt"].timestampValue,
+            entity.properties["packageHashVersion"] != null
+                ? entity.properties["packageHashVersion"].stringValue
+                : entity.properties["packageVersion"].stringValue);
       }));
       cursor = result.batch.endCursor;
       shouldContinue = result.batch.moreResults == "NOT_FINISHED";
