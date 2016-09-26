@@ -115,12 +115,16 @@ class _PackageGenerator {
 
   Iterable<Package> _findLatestPackages(Iterable<Package> packages) {
     return packages.where((p) {
-      List<Package> samePackages = pubRetriever.packagesByName[p.name]?.toList();
-      if (samePackages != null && samePackages.isNotEmpty) {
-        samePackages.sort();
-        return p == samePackages.last;
+      if (flutterPackageNames.contains(p.name)) {
+        return true;
       } else {
-        return false;
+        List<Package> samePackages = pubRetriever.packagesByName[p.name]?.toList();
+        if (samePackages != null && samePackages.isNotEmpty) {
+          samePackages.sort();
+          return p == samePackages.last;
+        } else {
+          return false;
+        }
       }
     });
   }
