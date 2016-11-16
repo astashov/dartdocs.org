@@ -71,7 +71,7 @@ class PackageGenerator {
           } else {
             options.add("--input=${package.pubCacheDir(config)}");
           }
-          await _runCommand(logs, "dartdoc", options);
+          await _runCommand(logs, "pub", ["global", "run", "dartdoc"]..addAll(options));
           await _archivePackage(logs, package);
         }
       } on RunCommandError catch (e, _) {
