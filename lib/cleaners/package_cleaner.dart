@@ -42,9 +42,22 @@ class PackageCleaner {
     if (_usedByDartDocGeneratorPackagesMemoizer == null) {
       var packages = new Set();
       var result = Process.runSync("pub", ["global", "list"]);
-      var line = result.stdout.split("\n").firstWhere((String l) => l.startsWith("crossdart"));
-      var version = line.split(" ")[1];
-      for (var dir in ["/dartdoc", p.join(config.pubCacheDir, "hosted", "pub.dartlang.org", "crossdart-${version}"), config.dirroot]) {
+      var dirs = ["/dartdoc"];
+      var stdout = result.stdout.toString();
+      var crossdartLine = stdout.split("\n").firstWhere((String l) => l.startsWith("crossdart"), orElse: () => null);
+      if (crossdartLine != null) {
+        var crossdartVersion = crossdartLine.split(" ")[1];
+        packages.add(new Package.build("crossdart", crossdartVersion));
+        dirs.add(p.join(config.pubCacheDir, "hosted", "pub.dartlang.org", "crossdart-${crossdartVersion}"));
+      }
+      var dartdocLine = stdout.split("\n").firstWhere((String l) => l.startsWith("dartdoc"), orElse: () => null);
+      if (dartdocLine != null) {
+        var dartdocVersion = dartdocLine.split(" ")[1];
+        packages.add(new Package.build("dartdoc", dartdocVersion));
+        dirs.add(p.join(config.pubCacheDir, "hosted", "pub.dartlang.org", "dartdoc-${dartdocVersion}"));
+      }
+      dirs.add(config.dirroot);
+      for (var dir in dirs) {
         if (new Directory(dir).existsSync()) {
           var pubspecLock = new File(p.join(dir, "pubspec.lock"));
           if (!pubspecLock.existsSync()) {
