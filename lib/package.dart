@@ -12,7 +12,6 @@ import "package:yaml/yaml.dart" as yaml;
 const flutterPackageNames = const [
   "flutter",
   "flutter_driver",
-  "flutter_markdown",
   "flutter_test",
   "flutter_tools"
 ];
