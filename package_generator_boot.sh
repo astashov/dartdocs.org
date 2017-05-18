@@ -12,6 +12,7 @@ apt-get install dart monit git unzip -y
 usermod -m -d /root root
 export HOME=/root
 export PATH=$PATH:/usr/lib/dart/bin
+export DART_VM_OPTIONS="--old_gen_heap_size=4096"
 
 pub global activate crossdart
 
@@ -46,12 +47,12 @@ gc_project_name: dart-carte-du-jour
 gc_zone: us-central1-f
 gc_group_name: dartdocs-package-generators
 bucket: www.dartdocs.org
+install_timeout: 120
 mode: dartdocs
 should_delete_old_packages: true
 number_of_concurrent_builds: 2
 crossdart_hosted_url: https://www.crossdart.info
-crossdart_gcs_prefix: p
-' > config.yaml
+crossdart_gcs_prefix: p' > config.yaml
 
 echo 'set daemon 60
 set logfile syslog facility log_daemon
@@ -78,6 +79,6 @@ echo '# rotate logs
 0 * * * * root /usr/sbin/logrotate /dartdocorg/logrotate.conf' > /etc/cron.d/logrotate
 
 echo '# update flutter
-0 0 * * * root /dartdocorg/update_flutter.sh' > /etc/cron.d/flutter
+0 */6 * * * root /dartdocorg/update_flutter.sh' > /etc/cron.d/flutter
 
 monit reload
