@@ -1,6 +1,7 @@
 #!/bin/bash
 export PATH=/usr/local/bin:/usr/bin:/bin/:/usr/lib/dart/bin
 export HOME=/root
+export FLUTTER_ROOT=/flutter
 DIRROOT=/dartdocorg
 
 case $1 in
