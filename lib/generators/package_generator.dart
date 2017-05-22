@@ -60,6 +60,7 @@ class PackageGenerator {
             "--output=${package.outputDir(config)}",
             "--hosted-url=${config.hostedUrl}",
             "--rel-canonical-prefix=${package.canonicalUrl(config)}",
+            "--exclude=dart.collection,dart.math,dart.core,dart.developer,dart.io,dart.ui,dart.isolate,dart.convert,dart.async,dart.typed_data",
             "--header=${path.join(config.dirroot, "resources", "redirector.html")}",
             "--footer=${path.join(config.dirroot, "resources", "google_analytics_dartdocs.html")}",
             "--add-crossdart"
